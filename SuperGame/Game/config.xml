@@ -50,7 +50,7 @@
 
   <entities>
     <gravity value="925"/>
-    <max_falling_speed value="-500"/>
+    <max_falling_speed value="-400"/>
     <player>
       <folder>sprites/characters</folder>
       <folder>audio/fx</folder>

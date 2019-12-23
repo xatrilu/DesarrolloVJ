@@ -52,10 +52,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ShowIncludes>false</ShowIncludes>
+      <AdditionalIncludeDirectories>E:\GitHub Proyects\DesarrolloVJ\SuperGame\Motor2D\SDL;E:\GitHub Proyects\DesarrolloVJ\SuperGame\Motor2D\SDL_image;E:\GitHub Proyects\DesarrolloVJ\SuperGame\Motor2D\SDL_mixer;E:\GitHub Proyects\DesarrolloVJ\SuperGame\Motor2D\SDL_ttf;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>E:\GitHub Proyects\DesarrolloVJ\SuperGame\Motor2D\SDL;E:\GitHub Proyects\DesarrolloVJ\SuperGame\Motor2D\SDL_image;E:\GitHub Proyects\DesarrolloVJ\SuperGame\Motor2D\SDL_mixer;E:\GitHub Proyects\DesarrolloVJ\SuperGame\Motor2D\SDL_ttf;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -68,11 +70,13 @@
       <UseFullPaths>false</UseFullPaths>
       <ShowIncludes>false</ShowIncludes>
       <PreprocessorDefinitions>_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>E:\GitHub Proyects\DesarrolloVJ\SuperGame\Motor2D\SDL;E:\GitHub Proyects\DesarrolloVJ\SuperGame\Motor2D\SDL_image;E:\GitHub Proyects\DesarrolloVJ\SuperGame\Motor2D\SDL_mixer;E:\GitHub Proyects\DesarrolloVJ\SuperGame\Motor2D\SDL_ttf;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
+      <AdditionalLibraryDirectories>E:\GitHub Proyects\DesarrolloVJ\SuperGame\Motor2D\SDL;E:\GitHub Proyects\DesarrolloVJ\SuperGame\Motor2D\SDL_image;E:\GitHub Proyects\DesarrolloVJ\SuperGame\Motor2D\SDL_mixer;E:\GitHub Proyects\DesarrolloVJ\SuperGame\Motor2D\SDL_ttf;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
