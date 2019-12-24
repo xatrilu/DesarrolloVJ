@@ -11,6 +11,10 @@
     <camera x ="1000" y ="200"/> 
   </renderer>
 
+  <font>
+    <default_font filepath="fonts/Lotterdam.ttf"/>
+  </font>
+
   <window>
     <resolution width="1024" height="768" scale="1"/>
     <fullscreen value="false"/>
@@ -34,13 +38,15 @@
     </sfx>
   </audio>
 
-  <map>
+ <map>
     <folder>maps/</folder>
     <level1>
 	<music song="Island_Coconuts.ogg" />
+	<initial_camera x="0" y="-435" />
     </level1>
     <level2>
 	<music song="Video_Game_Soldiers.ogg" />
+	<initial_camera x="0" y="-508" />
     </level2>
   </map>
 
@@ -100,8 +106,10 @@
     <folder>sprites/particles</folder>
     <dust source="particles.png"/>
   </particles>
-  <ui>
-    <transition_speed value="200.0" />
-  </ui>
+ 
+ <gui>
+    <image file="sprites/"/>
+ </gui>
+
 
 </config>
