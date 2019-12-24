@@ -5,6 +5,8 @@
 #include <stdarg.h>
 #include <string.h>
 #include <assert.h>
+#include <stdio.h>
+#include <ctype.h>
 #include "p2Defs.h"
 
 #define TMP_STRING_SIZE	4096
@@ -353,6 +355,20 @@ public:
 		}
 		else
 			return 0;
+	}
+
+	p2SString lowercase() {
+		int l = Length();
+		char* lowercased = new char[l];
+
+		for (int i = 0; i < l; i++)
+		{
+			lowercased[i] = tolower(str[i]);
+		}
+
+		p2SString final_string(lowercased);
+
+		return final_string;
 	}
 
 private:

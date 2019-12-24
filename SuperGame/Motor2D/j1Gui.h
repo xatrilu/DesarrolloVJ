@@ -28,6 +28,7 @@ public:
 	bool Start();
 
 	bool PreUpdate();
+	bool Update(float dt);
 	bool PostUpdate();
 
 	bool CleanUp();
@@ -35,10 +36,9 @@ public:
 	virtual bool Input() { return true; };
 	virtual bool Draw() { return true; };
 
-	//Hover-Unnhover
-
-	j1UI_Element* CreateUIElement(UI_Type type, j1Module* callback, j1UI_Element* parent = nullptr, bool draggable = true);
-	virtual void Initialize() {};
+	j1UI_Element* CreateUIElement(UI_Type type, j1Module* callback, j1UI_Element* parent = nullptr, bool draggable = false, bool interactable = false, bool isStatic = false);
+	void DestroyUIElement(j1UI_Element* element);
+	void DestroyAllGui();
 
 	const SDL_Texture* GetAtlas() const;
 
@@ -51,7 +51,7 @@ private:
 
 public:
 	p2List<j1UI_Element*> ui_elements;
-	j1UI_Element* focusing_element = nullptr;
+	j1UI_Element* focused_element = nullptr;
 	bool debug = false;
 };
 

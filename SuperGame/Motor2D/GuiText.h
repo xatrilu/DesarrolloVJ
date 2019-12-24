@@ -6,16 +6,18 @@
 class GuiText : public j1UI_Element
 {
 public:
-	GuiText(j1Module* callback);
+	GuiText();
+	GuiText(j1Module* callback, bool isStatic);
 	~GuiText();
 
-	void InitializeText(iPoint position, p2SString text);
+	void Init(iPoint position, p2SString text);
+	bool Update(float dt);
+	bool CleanUp();
 	bool Draw();
 
-private:
+public:
 	p2SString		text;
 	const char* font;
 	SDL_Texture* texture = nullptr;
 };
-
 #endif // !_GUISTATICTEXT_H_

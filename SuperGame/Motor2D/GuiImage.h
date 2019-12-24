@@ -7,15 +7,20 @@
 class GuiImage : public j1UI_Element
 {
 public:
-	GuiImage(j1Module* callback);
+	GuiImage();
+	GuiImage(j1Module* callback,bool Static);
 	~GuiImage() {}
 
-	void InitializeImage(iPoint position, SDL_Rect section);
+	void Init(iPoint position, SDL_Rect section);
+	void EmptyInit(SDL_Rect dimensions);
+	bool Update(float dt);
+	bool CleanUp();
 	bool Draw();
 
-private:
+public:
 	SDL_Texture* tex;
 	SDL_Rect section;
 };
+
 
 #endif // !_GUIIMAGE_H_

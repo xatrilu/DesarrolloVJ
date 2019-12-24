@@ -81,6 +81,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Console.cpp" />
+    <ClCompile Include="ConsoleCommands.cpp" />
     <ClCompile Include="GuiButton.cpp" />
     <ClCompile Include="GuiImage.cpp" />
     <ClCompile Include="GuiInputText.cpp" />

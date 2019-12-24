@@ -27,6 +27,7 @@ class j1Trap;
 class j1FadeToBlack;
 class j1Gui;
 class j1Fonts;
+class Console;
 
 
 class j1App
@@ -99,6 +100,7 @@ public:
 	j1FadeToBlack*		fade_to_black;
 	j1Gui*				gui;
 	j1Fonts*			font;
+	Console*			console;
 
 	mutable p2SString	checkpoint_save;
 

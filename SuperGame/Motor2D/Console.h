@@ -1,0 +1,49 @@
+#ifndef _CONSOLE_H_
+#define _CONSOLE_H_
+#include "j1Module.h"
+#include "GuiText.h"
+#include "SDL_image/include/SDL_image.h"
+
+class GuiInputText;
+struct SDL_Rect;
+class ConsoleCommands;
+
+#define MAX_LOG_RECORD 100
+
+class Console : public j1Module
+{
+public:
+	Console();
+	~Console();
+
+	bool Awake(pugi::xml_node& config);
+	bool Start();
+	bool PreUpdate();
+	bool Update(float dt);
+	bool PostUpdate();
+	bool CleanUp();
+	void Command(ConsoleCommands*);
+
+	void AddLogText(p2SString new_text);
+
+	void CreateInterface();
+	void DestroyInterface();
+
+	void CreateCommand(const char* command, j1Module* callback, uint min_arg = 1, uint max_args = 1, const char* explanation = "No explanation given");
+	void CheckCommand(p2SString command);
+
+public:
+	GuiInputText* command_input;
+	p2List<GuiText*> log_record;
+	p2List<p2SString> input_commands;
+	p2List<ConsoleCommands*> commands;
+	p2List_item<p2SString>* current_consulting_command;
+	int l;
+	bool isVisible;
+	SDL_Rect log_box;
+	SDL_Rect command_background;
+	bool CleanUpStarted;
+};
+
+#endif 
+

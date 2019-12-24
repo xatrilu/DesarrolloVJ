@@ -2,6 +2,7 @@
 #define __j1INPUT_H__
 
 #include "j1Module.h"
+#include "GuiText.h"
 
 //#define NUM_KEYS 352
 #define NUM_MOUSE_BUTTONS 5
@@ -65,18 +66,24 @@ public:
 	bool GetWindowEvent(int code);
 
 	// Get mouse / axis position
-	void GetMousePosition(int &x, int &y);
+	void GetMousePosition(int& x, int& y);
 	void GetMouseMotion(int& x, int& y);
 	void EnableTxtInput(bool enable);
 
 private:
 	bool		windowEvents[WE_COUNT];
-	j1KeyState*	keyboard;
+	j1KeyState* keyboard;
 	j1KeyState	mouse_buttons[NUM_MOUSE_BUTTONS];
 	int			mouse_motion_x;
 	int			mouse_motion_y;
 	int			mouse_x;
 	int			mouse_y;
+	GuiText*    text_receiver;
+public:
+	char* text;
+	char* composition;
+	uint32		mouse;
+	uint32		selection_len;
 };
 
 #endif // __j1INPUT_H__
