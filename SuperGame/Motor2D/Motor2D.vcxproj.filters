@@ -97,6 +97,9 @@
     <ClCompile Include="j1Fonts.cpp">
       <Filter>Desenvolupament  ========\Modules\Bases</Filter>
     </ClCompile>
+    <ClCompile Include="Console.cpp">
+      <Filter>Desenvolupament  ========\Modules\Bases</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="j1App.h">
@@ -217,6 +220,12 @@
       <Filter>Desenvolupament  ========\UI</Filter>
     </ClInclude>
     <ClInclude Include="j1Fonts.h">
+      <Filter>Desenvolupament  ========\Modules\Bases</Filter>
+    </ClInclude>
+    <ClInclude Include="Console.h">
+      <Filter>Desenvolupament  ========\Modules\Bases</Filter>
+    </ClInclude>
+    <ClInclude Include="ConsoleCommands.h">
       <Filter>Desenvolupament  ========\Modules\Bases</Filter>
     </ClInclude>
   </ItemGroup>

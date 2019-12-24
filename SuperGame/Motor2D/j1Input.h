@@ -67,6 +67,7 @@ public:
 	// Get mouse / axis position
 	void GetMousePosition(int &x, int &y);
 	void GetMouseMotion(int& x, int& y);
+	void EnableTxtInput(bool enable);
 
 private:
 	bool		windowEvents[WE_COUNT];

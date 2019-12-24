@@ -6,6 +6,13 @@
 
 class j1Module;
 
+enum class FocusEvent {
+	FOCUS_IN,
+	FOCUS_OUT,
+	FOCUSED,
+	CLICKED
+};
+
 enum class UI_Type
 {
 	BUTTON,
@@ -21,27 +28,39 @@ public:
 	j1UI_Element() {};
 	~j1UI_Element() {};
 
+	virtual void Init() {}
 	virtual bool Input() { return true; }
+	virtual bool Update(float dt) { return true; }
+	virtual bool CleanUp() { return true; };
+
 	virtual bool Draw() { return true; }
+	virtual void HandleFocusEvent(FocusEvent event) {}
 
 	SDL_Rect GetScreenRect() const;
 	SDL_Rect GetLocalRect() const;
 	iPoint GetScreenPos() const;
 	iPoint GetLocalPos() const;
-	void SetLocalPos(iPoint new_position) { local_position = new_position; }
-	bool MouseHovering();
+	void SetLocalPos(iPoint new_pos); 
+	bool OnHover();
 
 public:
-	iPoint			local_position;
-	iPoint			screen_position;
-	UI_Type			type;
+	iPoint	local_pos;
+	iPoint	screen_pos;
+	UI_Type	type;
+	FocusEvent focus_event;
+
+	bool draggable;
+	bool interactable;
+	bool isStatic;
+	
+
+	j1Module* callback = nullptr;
 	j1UI_Element* parent = nullptr;
-	bool			draggable;
-	j1Module* callback;
 
 public:
 	SDL_Rect rect;
 };
+
 
 #endif // !j1UIELEMENT_H
 
