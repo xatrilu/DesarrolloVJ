@@ -10,16 +10,16 @@ class j1Entity;
 struct SDL_Texture;
 class j1Player;
 class j1WalkingEnemy;
+class j1WalkingEnemy2;
 class j1FlyingEnemy;
+class j1Collectible;
 
 enum class EntityType
 {
 	PLAYER,
 	WALKING_ENEMY,
-	WALKING_ENEMY2,
 	FLYING_ENEMY,
-	TRAP,
-	PARTICLES,
+	COLLECTIBLE,
 	UNKNOWN
 };
 
@@ -45,8 +45,8 @@ public:
 	bool CheckpointSave();
 	bool CheckpointLoad();
 
-	j1Entity*	 getPlayer();
-	j1Entity*	 CreateEntity(EntityType type, int position_x, int position_y);
+	j1Entity* getPlayer();
+	j1Entity* CreateEntity(EntityType type, int position_x, int position_y);
 	virtual void DestroyEntity(j1Entity* delete_entity);
 	void		 DestroyAllEntities();
 	void		 RellocateEntities();
@@ -56,24 +56,16 @@ public:
 	p2List<j1Entity*> entities;
 	pugi::xml_node config_data;
 
-	j1Player* player;
+	j1Player* player_pointer;
 
 public:
 	int gravity = 0;
 	int max_falling_speed = 0;
 
-	j1WalkingEnemy* reference_walking_enemy = nullptr;
-	j1FlyingEnemy* reference_flying_enemy = nullptr;
-	j1WalkingEnemy2* reference_walking_enemy2 = nullptr;
-
-	//health
-	int trap_health = 0;
-
-	//damage
-	int trap_damage = 0;
-
-	//textures
-	SDL_Texture* trap_texture = nullptr;
+	j1Player* reference_player;
+	j1WalkingEnemy* reference_walking_enemy;
+	j1FlyingEnemy* reference_flying_enemy;
+	j1Collectible* reference_collectible;
 
 	//sfx
 	uint walking_enemy_attack_fx;
@@ -84,10 +76,10 @@ public:
 	uint flying_enemy_die_fx;
 	uint walking_enemy2_die_fx;
 
-	float time_between_updates = 0.01f;
-	float accumulated_time = 0;
+	float time_between_updates;
+	float accumulated_time;
 
-	bool blocked_movement = false;
+	bool blocked_movement;
 
 };
 

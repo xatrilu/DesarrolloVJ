@@ -33,8 +33,10 @@ public:
 	bool Save(pugi::xml_node& data) const;
 	bool Load(pugi::xml_node& data);
 
+	void OnCommand(p2SString command);
+
 	//bool LoadAnimations();
-	
+
 public:
 	float	jumpImpulse;
 	float	doubleJumpImpulse;
@@ -43,17 +45,16 @@ public:
 	float	deceleration;
 	float	max_side_speed;
 	int		enemy_bouncing;
-
-	bool	can_double_jump = true;
-	bool	can_go_right = true;
-	bool	can_go_left = true;
+	int		lives;
+	int		last_score;
+	bool	can_double_jump;
+	bool	can_go_right;
+	bool	can_go_left;
 
 	EntityState last_state;
 
 	p2SString	 folder;
 	Player_Input player_input;
-
-	pugi::xml_document animation_doc;
 
 	//fx
 	uint		jump_fx;
@@ -61,9 +62,9 @@ public:
 	p2SString	jump_fx_path;
 	p2SString	double_Jump_fx_path;
 
-	bool god = false;
-	bool controls_blocked = false;
-	bool isVisible = true;
+	bool god;
+	bool controls_blocked;
+	bool isVisible;
 
 	Collider* last_checkpoint = nullptr;
 };

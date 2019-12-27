@@ -9,21 +9,70 @@
 #include "j1Scene.h"
 #include "j1Map.h"
 #include "j1Audio.h"
-#include "j1UI.h"
 #include "j1Particles.h"
 #include "j1EntityManager.h"
 #include "j1FadeToBlack.h"
+#include "j1Console.h"
+#include "j1Command.h"
 #include "brofiler/Brofiler/Brofiler.h"
 
-j1Player::j1Player():j1Entity (EntityType::PLAYER) {
+j1Player::j1Player() :j1Entity(EntityType::PLAYER) {
 
 	name.create("player");
 	LoadAnimations("Animations_traveller.tmx");
+	current_animation = &idle;
 	crouch_down.loop = false;
 	crouch_down.loop = false;
+
+	App->entities->player_pointer = this;
+
+	gravity = App->entities->gravity;
+	max_falling_speed = App->entities->max_falling_speed;
+
+	type = EntityType::PLAYER;
+
+	particles_created = false;
+	controls_blocked = false;
+	isVisible = true;
+	god = false;
+
+	can_double_jump = true;
+	can_go_left = true;
+	can_go_right = true;
+	lives = 3;
+	score = 0;
+
+	if (App->entities->reference_player != nullptr)
+	{
+		texture = App->entities->reference_player->texture;
+		max_running_speed = App->entities->reference_player->max_running_speed;
+		max_side_speed = App->entities->reference_player->max_side_speed;
+		acceleration = App->entities->reference_player->acceleration;
+		deceleration = App->entities->reference_player->deceleration;
+
+		jumpImpulse = App->entities->reference_player->jumpImpulse;
+		doubleJumpImpulse = App->entities->reference_player->doubleJumpImpulse;
+		enemy_bouncing = App->entities->reference_player->enemy_bouncing;
+
+		jump_fx = App->entities->reference_player->jump_fx;
+		double_Jump_fx = App->entities->reference_player->double_Jump_fx;
+		die_fx = App->entities->reference_player->die_fx;
+
+		position = App->entities->reference_player->initialPosition;
+
+		collider = App->collision->AddCollider(SDL_Rect{ initialPosition.x, initialPosition.y,32,64 }, COLLIDER_PLAYER, (j1Module*)this);
+		raycast = App->collision->AddCollider(SDL_Rect{ initialPosition.x, initialPosition.y,20,5 }, COLLIDER_PLAYER_ATTACK, (j1Module*)this);
+
+		isVisible = true;
+		grounded = false;
+		current_speed = { 0,0 };
+		last_score = 0;
+
+		App->console->CreateCommand("god_mode", this, "Toggles god mode ON/OFF");
+	}
 }
 
-j1Player::~j1Player(){ }
+j1Player::~j1Player() { }
 
 bool j1Player::Awake(pugi::xml_node& config) {
 
@@ -51,43 +100,42 @@ bool j1Player::Awake(pugi::xml_node& config) {
 	die_fx_path = config.child("dieFX").attribute("source").as_string();
 	jump_fx_path = config.child("jumpFX").attribute("source").as_string();
 	double_Jump_fx_path = config.child("jump2FX").attribute("source").as_string();
-	
-	//colliders
-	collider = App->collision->AddCollider(SDL_Rect{0,0,32,64}, COLLIDER_PLAYER, (j1Module*)App->entities->player); //a collider to start
-	raycast = App->collision->AddCollider(SDL_Rect{ 0,0,20,5 }, COLLIDER_PLAYER_ATTACK, (j1Module*)App->entities->player);
 
 	return ret;
 }
 
-bool j1Player::Start(){
+bool j1Player::Start() {
 
-	texture = App->tex->Load("sprites/characters/spritesheet_traveler2.png");
+	current_speed = { 0,0 };
 
 	die_fx = App->audio->LoadFx(die_fx_path.GetString());
 	jump_fx = App->audio->LoadFx(jump_fx_path.GetString());
 	double_Jump_fx = App->audio->LoadFx(double_Jump_fx_path.GetString());
 
-	position = initialPosition;
-
 	return true;
 }
 
 bool j1Player::CleanUp() {
-	collider->to_delete = true;
-	collider = nullptr;
-	raycast->to_delete = true;
-	raycast = nullptr;
-	App->tex->UnLoad(texture);
 	texture = nullptr;
+	if (collider != nullptr)
+	{
+		collider->to_delete = true;
+		collider = nullptr;
+	}
+	if (raycast != nullptr)
+	{
+		raycast->to_delete = true;
+		raycast = nullptr;
+	}
 	return true;
 }
 
 
-bool j1Player::PreUpdate(){
+bool j1Player::PreUpdate() {
 	BROFILER_CATEGORY("PlayerPreUpdate", Profiler::Color::CadetBlue)
 
-	//get player input
-	player_input.pressing_W = App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT;
+		//get player input
+		player_input.pressing_W = App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT;
 	player_input.pressing_A = App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT;
 	player_input.pressing_S = App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT;
 	player_input.pressing_D = App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT;
@@ -110,153 +158,157 @@ bool j1Player::PreUpdate(){
 
 	if (!App->pause)
 	{
-		//speed.x = 0;
-		if(!controls_blocked){
-			if (state == IDLE)
-			{
-				can_double_jump = true;
-
-				if (player_input.pressing_D) state = RUN_FORWARD;
-
-				if (player_input.pressing_A) state = RUN_BACKWARD;
-		
-				if (player_input.pressing_S) state = CROUCH_DOWN;
-
-				if (player_input.pressing_F)
+		if (!controls_blocked) {
+			if (lives > 0) {
+				if (state == IDLE)
 				{
-					if (flip == SDL_FLIP_NONE)
-					{state = SLIDE_FORWARD;}
-					else
-					{state = SLIDE_BACKWARD;}
-				}
+					can_double_jump = true;
 
-				if ((player_input.pressing_space) && (!god))
-				{
-					App->audio->PlayFx(jump_fx);
-					state = JUMP;
-					current_speed.y = jumpImpulse;
-					grounded = false;
-				}
+					if (player_input.pressing_D) state = RUN_FORWARD;
 
-			}
+					if (player_input.pressing_A) state = RUN_BACKWARD;
 
-			if (state == RUN_FORWARD)
-			{
-				if (player_input.pressing_D)
-				{
-					if (current_speed.x < max_running_speed)
+					if (player_input.pressing_S) state = CROUCH_DOWN;
+
+					if (player_input.pressing_F)
 					{
-						current_speed.x += acceleration;
+						if (flip == SDL_FLIP_NONE)
+						{
+							state = SLIDE_FORWARD;
+						}
+						else
+						{
+							state = SLIDE_BACKWARD;
+						}
+					}
+
+					if ((player_input.pressing_space) && (!god))
+					{
+						App->audio->PlayFx(jump_fx);
+						state = JUMP;
+						current_speed.y = jumpImpulse;
+						grounded = false;
+					}
+
+				}
+
+				if (state == RUN_FORWARD)
+				{
+					if (player_input.pressing_D)
+					{
+						if (current_speed.x < max_running_speed)
+						{
+							current_speed.x += acceleration;
+						}
+					}
+
+					if (!player_input.pressing_D) state = IDLE;
+
+					if ((player_input.pressing_space) && (!god))
+					{
+						App->audio->PlayFx(jump_fx);
+						state = JUMP;
+						current_speed.y = jumpImpulse;
+						grounded = false;
+					}
+
+					if (player_input.pressing_F) state = SLIDE_FORWARD;
+				}
+
+				if (state == RUN_BACKWARD)
+				{
+					if (player_input.pressing_A)
+					{
+						if (current_speed.x > -max_running_speed)
+						{
+							current_speed.x -= acceleration;
+						}
+					}
+
+					if (!player_input.pressing_A) state = IDLE;
+
+					if ((player_input.pressing_space) && (!god))
+					{
+						App->audio->PlayFx(jump_fx);
+						state = JUMP;
+						current_speed.y = jumpImpulse;
+						grounded = false;
+					}
+
+					if (player_input.pressing_F) state = SLIDE_BACKWARD;
+				}
+
+
+				if (state == CROUCH_DOWN)
+				{
+					if (!player_input.pressing_S)
+					{
+						state = CROUCH_UP;
+						crouch_down.Reset();
 					}
 				}
 
-				if (!player_input.pressing_D) state = IDLE;
-
-				if ((player_input.pressing_space) && (!god))
+				if (state == CROUCH_UP)
 				{
-					App->audio->PlayFx(jump_fx);
-					state = JUMP;
-					current_speed.y = jumpImpulse;
-					grounded = false;
-				}
-
-				if (player_input.pressing_F) state = SLIDE_FORWARD;
-			}
-
-			if (state == RUN_BACKWARD)
-			{
-				if (player_input.pressing_A)
-				{
-					if (current_speed.x > -max_running_speed)
-					{
-						current_speed.x -= acceleration;
+					if (current_animation->Finished()) {
+						state = IDLE;
+						crouch_up.Reset();
 					}
 				}
 
-				if (!player_input.pressing_A) state = IDLE;
-
-				if ((player_input.pressing_space)&&(!god))
+				if (state == SLIDE_FORWARD)
 				{
-					App->audio->PlayFx(jump_fx);
-					state = JUMP;
-					current_speed.y = jumpImpulse;
-					grounded = false;
+					if (!player_input.pressing_F) state = IDLE;
 				}
 
-				if (player_input.pressing_F) state = SLIDE_BACKWARD;
-			}
-
-
-			if (state == CROUCH_DOWN)
-			{
-				if (!player_input.pressing_S)
+				if (state == SLIDE_BACKWARD)
 				{
-					state = CROUCH_UP;
-					crouch_down.Reset();
+					if (!player_input.pressing_F) state = IDLE;
 				}
-			}
 
-			if (state == CROUCH_UP)
-			{
-				if (current_animation->Finished()) {
-					state = IDLE;
-					crouch_up.Reset();
-				}
-			}
-
-			if (state == SLIDE_FORWARD)
-			{
-				if (!player_input.pressing_F) state = IDLE;
-			}
-
-			if (state == SLIDE_BACKWARD)
-			{
-				if (!player_input.pressing_F) state = IDLE;
-			}
-
-			if (state == JUMP)
-			{
-				if ((player_input.pressing_D)&&(current_speed.x < max_side_speed)) current_speed.x += acceleration;
-				if ((player_input.pressing_A)&&(current_speed.x > -max_side_speed)) current_speed.x -= acceleration;
-
-				//double jump
-				if ((player_input.pressing_space) && (can_double_jump == true) && (current_speed.y <= jumpImpulse * 0.5f))
+				if (state == JUMP)
 				{
-					App->audio->PlayFx(double_Jump_fx);
-					jump.Reset();
-					current_speed.y = doubleJumpImpulse;
-					can_double_jump = false;
-					App->particles->AddParticle(App->particles->dust, position.x, position.y + current_animation->GetCurrentFrame().h * 0.75f, COLLIDER_NONE, 0, flip);
-				}
+					if ((player_input.pressing_D) && (current_speed.x < max_side_speed)) current_speed.x += acceleration;
+					if ((player_input.pressing_A) && (current_speed.x > -max_side_speed)) current_speed.x -= acceleration;
 
-				if (current_animation->Finished())
+					//double jump
+					if ((player_input.pressing_space) && (can_double_jump == true) && (current_speed.y <= jumpImpulse * 0.5f))
+					{
+						App->audio->PlayFx(double_Jump_fx);
+						jump.Reset();
+						current_speed.y = doubleJumpImpulse;
+						can_double_jump = false;
+						App->particles->AddParticle(App->particles->dust, position.x, position.y + current_animation->GetCurrentFrame().h * 0.75f, COLLIDER_NONE, 0, flip);
+					}
+
+					if (current_animation->Finished())
+					{
+						state = FALL;
+						jump.Reset();
+					}
+
+				}
+				if (state == FALL)
 				{
-					state = FALL;
-					jump.Reset();
+					if ((player_input.pressing_D) && (can_go_right == true) && (current_speed.x < max_side_speed)) current_speed.x += acceleration;
+					if ((player_input.pressing_A) && (can_go_left == true) && (current_speed.x > max_side_speed)) current_speed.x -= acceleration;
+
+					if ((player_input.pressing_space) && (can_double_jump == true) & (current_speed.y <= jumpImpulse * 0.5f))
+					{
+						jump.Reset();
+						state = JUMP;
+						App->audio->PlayFx(double_Jump_fx);
+						current_speed.y = doubleJumpImpulse;
+						can_double_jump = false;
+						grounded = false;
+						App->particles->AddParticle(App->particles->dust, position.x, position.y + current_animation->GetCurrentFrame().h * 0.75f, COLLIDER_NONE, 0, flip);
+					}
+
+					if (current_animation->Finished()) fall.Reset();
 				}
-
 			}
-			if (state == FALL)
-			{
-				if ((player_input.pressing_D) && (can_go_right == true)&&(current_speed.x < max_side_speed)) current_speed.x += acceleration;
-				if ((player_input.pressing_A) && (can_go_left == true)&&(current_speed.x > max_side_speed)) current_speed.x -= acceleration;
-
-				if ((player_input.pressing_space) && (can_double_jump == true) & (current_speed.y <= jumpImpulse * 0.5f))
-				{
-					jump.Reset();
-					state = JUMP;
-					App->audio->PlayFx(double_Jump_fx);
-					current_speed.y = doubleJumpImpulse;
-					can_double_jump = false;
-					grounded = false;
-					App->particles->AddParticle(App->particles->dust, position.x, position.y + current_animation->GetCurrentFrame().h * 0.75f, COLLIDER_NONE, 0, flip);
-				}
-
-				if (current_animation->Finished()) fall.Reset();
-			}
-			if (state == DIE)
-			{
-				//add die result
+			else {
+				App->scene->GameOver();
 			}
 		}
 	}
@@ -264,19 +316,19 @@ bool j1Player::PreUpdate(){
 	return true;
 }
 
-bool j1Player::Update(float dt){
+bool j1Player::Update(float dt) {
 	BROFILER_CATEGORY("PlayerUpdate", Profiler::Color::CadetBlue)
 
-	MovementControl(dt); //calculate new position
+		MovementControl(dt); //calculate new position
 
-	//collider->SetPos(floor(position.x), position.y + 6);
+		//collider->SetPos(floor(position.x), position.y + 6);
 
 	if (last_collider != nullptr)
 	{
-		if ((!raycast->CheckCollision(last_collider->rect))&& (state != DIE))
+		if ((!raycast->CheckCollision(last_collider->rect)) && (state != DIE))
 		{
 			grounded = false;
-			if((state != JUMP)&&(!god)) 
+			if ((state != JUMP) && (!god))
 				state = FALL;
 		}
 	}
@@ -333,11 +385,11 @@ bool j1Player::Update(float dt){
 	case JUMP:
 		current_animation = &jump;
 
-		if (current_speed.y <= 0){
+		if (current_speed.y <= 0) {
 			state = FALL;
 			jump.Reset();
 		}
-		if ((last_state = RUN_FORWARD)||(last_state == RUN_BACKWARD)){
+		if ((last_state = RUN_FORWARD) || (last_state == RUN_BACKWARD)) {
 			current_speed.x *= 0.5f;
 		}
 		/*
@@ -365,19 +417,23 @@ bool j1Player::Update(float dt){
 		break;
 	}
 
+
+
 	if (flip == SDL_FLIP_NONE) collider->SetPos(position.x + 8, position.y);
 	else collider->SetPos(position.x + 16, position.y);
+
 	raycast->SetPos(floor(collider->rect.x + collider->rect.w * 0.5f - raycast->rect.w * 0.5f), collider->rect.y + collider->rect.h);
+
 	return true;
 }
 
 bool j1Player::PostUpdate() {
 	BROFILER_CATEGORY("PlayerPreUpdate", Profiler::Color::CadetBlue)
-	if (isVisible)
-	{
-		App->render->Blit(texture, position.x, position.y, &current_animation->GetCurrentFrame(), flip);
-	}
-	return true;	
+		if (isVisible)
+		{
+			App->render->Blit(texture, position.x, position.y, &current_animation->GetCurrentFrame(), flip);
+		}
+	return true;
 }
 
 //control over all player movement physics
@@ -414,62 +470,8 @@ void j1Player::MovementControl(float dt) {
 		position.y += current_speed.y * dt;
 	}
 
-	//LOG("Speed x: %.2f y: %.2f", current_speed.x, current_speed.y);
-	//LOG("Floor Speed x: %.2f y: %.2f", floor(current_speed.x), floor(current_speed.y));
-	//LOG("Grounded %i", grounded);
+
 }
-
-/*
-bool j1Player::LoadAnimations() {
-	pugi::xml_parse_result result = animation_doc.load_file("sprites/characters/animations.xml");
-	bool ret = true;
-	uint i = 0u;
-	uint j = 0;
-	
-	if (result == NULL)
-	{
-		LOG("Could not load animations xml file %s. pugi error: %s", "animations.xml", result.description());
-		ret = false;
-	}
-
-	animations.add(&idle);
-	animations.add(&run);
-	animations.add(&crouch_down);
-	animations.add(&crouch_up);
-	animations.add(&jump);
-	animations.add(&fall);
-
-	pugi::xml_node animation = animation_doc.child("animations").child("animation");
-	pugi::xml_node frame;
-	p2List_item<Animation*>* item = animations.start;
-	int x, y, w, h;
-	float anim_speed = 1;
-
-	LOG("Loading animations ---------");
-
-	for (animation ; animation; animation = animation.next_sibling("animation"))
-	{
-		item->data->loop = animation.attribute("loop").as_bool();
-
-		for (frame = animation.child("data").child("frame"); frame; frame = frame.next_sibling("frame"))
-		{
-			x = frame.attribute("x").as_int();
-			y = frame.attribute("y").as_int();
-			w = frame.attribute("w").as_int();
-			h = frame.attribute("h").as_int();
-			anim_speed = frame.attribute("speed").as_float();
-
-			item->data->PushBack({x,y,w,h}, anim_speed);
-		}
-		i++;
-		item = item->next;
-	}
-
-	LOG("%u animations loaded", i);
-
-	return ret;
-}
-*/
 
 bool j1Player::Save(pugi::xml_node& data) const {
 
@@ -477,6 +479,7 @@ bool j1Player::Save(pugi::xml_node& data) const {
 
 	p_position.append_attribute("x") = position.x;
 	p_position.append_attribute("y") = position.y;
+
 	return true;
 }
 
@@ -500,7 +503,7 @@ void j1Player::OnCollision(Collider* c1, Collider* c2) {
 		switch (c2->type)
 		{
 		case COLLIDER_WALL:
-			if (position.y + current_animation->GetCurrentFrame().h < c2->rect.y + COLLIDER_MARGIN){
+			if (position.y + current_animation->GetCurrentFrame().h < c2->rect.y + COLLIDER_MARGIN) {
 				grounded = true;
 				position.y = c2->rect.y - current_animation->GetCurrentFrame().h;
 				current_speed.y = 0;
@@ -510,11 +513,11 @@ void j1Player::OnCollision(Collider* c1, Collider* c2) {
 			if (position.y + current_animation->GetCurrentFrame().h > c2->rect.y) {
 				position.x = lastPosition.x;
 			}
-			if (position.y > c2->rect.y + c2->rect.h - COLLIDER_MARGIN){
+			if (position.y > c2->rect.y + c2->rect.h - COLLIDER_MARGIN) {
 				position.y = c2->rect.y + c2->rect.h;
 				current_speed.y = 0;
 			}
-			if ((position.y > c2->rect.y) && (position.x > c2->rect.x) && (position.x + current_animation->GetCurrentFrame().w < c2->rect.x + c2->rect.w) && (position.x < c2->rect.x + c2->rect.w)){
+			if ((position.y > c2->rect.y) && (position.x > c2->rect.x) && (position.x + current_animation->GetCurrentFrame().w < c2->rect.x + c2->rect.w) && (position.x < c2->rect.x + c2->rect.w)) {
 				position.y = lastPosition.y;
 				if (lastPosition.y + current_animation->GetCurrentFrame().h > c2->rect.y) {
 					//position.y = c2->rect.y - current_animation->GetCurrentFrame().h;
@@ -548,7 +551,7 @@ void j1Player::OnCollision(Collider* c1, Collider* c2) {
 			}
 
 			if (c2->isCheckpoint) {
-				if (!c2->checkpoint_tiggered){
+				if (!c2->checkpoint_tiggered) {
 					App->entities->CheckpointSave();
 					last_checkpoint = c2;
 				}
@@ -572,6 +575,8 @@ void j1Player::OnCollision(Collider* c1, Collider* c2) {
 				App->fade_to_black->FadeToBlack(App->scene->current_level, App->scene->current_level);
 				particles_created = true;
 				position = initialPosition;
+				lives--;
+				score = last_score;
 			}
 			break;
 
@@ -589,6 +594,8 @@ void j1Player::OnCollision(Collider* c1, Collider* c2) {
 					App->fade_to_black->FadeToBlack(App->scene->current_level, App->scene->current_level);
 					particles_created = true;
 					position = initialPosition;
+					lives--;
+					score = last_score;
 				}
 			}
 			break;
@@ -598,3 +605,16 @@ void j1Player::OnCollision(Collider* c1, Collider* c2) {
 	}
 }
 
+void j1Player::OnCommand(p2SString command) {
+
+	if (command == "god_mode")
+	{
+		god = !god;
+
+		if (god)
+			LOG("God mode activated");
+
+		if (!god)
+			LOG("God mode deactivated");
+	}
+}
