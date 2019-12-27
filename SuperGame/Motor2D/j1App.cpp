@@ -25,6 +25,7 @@
 #include "j1Gui.h"
 #include "j1Fonts.h"
 #include "Console.h"
+#include "j1FadeToBlack.h"
 #include "brofiler/Brofiler/Brofiler.h"
 
 // Constructor
@@ -49,7 +50,8 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	gui = new j1Gui();
 	font = new j1Fonts();
 	console = new Console();
-
+	mainMenu = new MainMenu();
+	fadeBlack = new j1FadeToBlack();
 
 	// Ordered for awake / Start / Update
 	// Reverse order of CleanUp
@@ -68,6 +70,8 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(gui);
 	AddModule(font);
 	AddModule(console);
+	AddModule(mainMenu);
+	AddModule(fadeBlack);
 
 	// render last to swap buffer
 	AddModule(render);

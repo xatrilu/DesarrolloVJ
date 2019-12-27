@@ -103,6 +103,9 @@
     <ClCompile Include="ConsoleCommands.cpp">
       <Filter>Desenvolupament  ========\Modules\Bases</Filter>
     </ClCompile>
+    <ClCompile Include="MainMenu.cpp">
+      <Filter>Desenvolupament  ========\Scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="j1App.h">
@@ -230,6 +233,9 @@
     </ClInclude>
     <ClInclude Include="ConsoleCommands.h">
       <Filter>Desenvolupament  ========\Modules\Bases</Filter>
+    </ClInclude>
+    <ClInclude Include="MainMenu.h">
+      <Filter>Desenvolupament  ========\Scenes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

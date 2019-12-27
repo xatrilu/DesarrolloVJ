@@ -3,15 +3,29 @@
 
 #include "j1Module.h"
 #include "j1App.h"
+#include "j1Timer.h"
 
 #define CAMERA_SPEED 200
 #define CAMERA_CENTER_MARGIN 30
 
 struct SDL_Texture;
+class GuiImage;
+class GuiText;
+class GuiButton;
+class GuiInputText;
+
+enum class Menu {
+	MAIN_MENU,
+	SETTINGS,
+	PAUSE,
+	CREDITS,
+	SCREEN_UI,
+	NO_MENU
+};
 
 enum Map
 {
-	NO_MAP = 0,
+	NO_MAP,
 	LEVEL_1,
 	LEVEL_2,
 };
@@ -40,12 +54,23 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
-	void ResetCamera(int kind_of_reset);
-	void ResetLevel();
+	//void ResetCamera(int kind_of_reset);
+	//void ResetLevel();
 	void LevelChange(Map unloading_map, Map loading_map);
+	void CreatePauseMenu();
+	void DeletePauseMenu();
+	void CreateSettingsScreen();
+
+	void OnEvent(j1UI_Element*, FocusEvent);
+	void OnCommand(p2SString command);
+
+	void CreateScreenUI();
 
 	bool Save(pugi::xml_node& data) const;
 	bool Load(pugi::xml_node& data);
+	void UpdateScreenUI();
+
+	void GameOver();
 
 public:
 	//edges
@@ -58,22 +83,60 @@ public:
 	int camera_frame_x_margin;
 	int camera_frame_y_margin;
 
-	bool blocked_camera = false;
+	bool blocked_camera;
+	bool showing_menu;
+	bool fullscreen;
+	int window_width;
+	int window_height;
+
+	//UI Info
+
+	//int score;
+	int time_left;
+	int max_time;
+	int time_star1;
+	int time_star2;
+	int time_star3;
+	int time_discount;
+	j1Timer timer;
+	GuiText* time_text;
+	GuiText* time_count;
+	GuiText* score;
+	//GuiSlider* slider;
+	p2List<GuiImage*> lives;
+	p2List<GuiImage*> stars;
+	GuiImage* star1;
+	GuiImage* star2;
+	GuiImage* star3;
+	GuiImage* coins;
+	GuiImage* timer_background;
 
 	//levels
 	Map current_level;
-	Map want_to_load = NO_MAP;
-
-	//player initial position
-	int	player_x_position;
-	int	player_y_position;
+	Menu visible_menu;
 
 	p2SString song;
 	p2SString folder;
 
-	int camera_margin = 5;
+	int camera_margin;
+	iPoint initial_camera_position;
+
+	//pause menu
+	p2List<j1UI_Element*> pause_menu;
+	p2List<j1UI_Element*> settings_screen;
+	p2List<j1UI_Element*> on_screen;
+	GuiImage* menu_background;
+	GuiImage* pause_text;
+	GuiButton* home_button;
+	GuiButton* settings_button;
+	GuiButton* restart_button;
+	GuiButton* resume_button;
+	GuiButton* go_back_button;
 
 private:
+	int on_screen_lives;
+	int on_screen_stars;
+	int on_screen_score;
 };
 
 #endif // __j1SCENE_H__

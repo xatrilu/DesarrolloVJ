@@ -28,6 +28,8 @@ class j1FadeToBlack;
 class j1Gui;
 class j1Fonts;
 class Console;
+class MainMenu;
+class j1FadeToBlack;
 
 
 class j1App
@@ -101,6 +103,8 @@ public:
 	j1Gui*				gui;
 	j1Fonts*			font;
 	Console*			console;
+	MainMenu*			mainMenu;
+	j1FadeToBlack*		fadeBlack;
 
 	mutable p2SString	checkpoint_save;
 
