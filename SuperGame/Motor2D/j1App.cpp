@@ -26,6 +26,7 @@
 #include "j1Fonts.h"
 #include "Console.h"
 #include "j1FadeToBlack.h"
+#include "MainMenu.h"
 #include "brofiler/Brofiler/Brofiler.h"
 
 // Constructor
