@@ -6,39 +6,43 @@
 class p2SString;
 class GuiText;
 
-enum class ButtonAction
-{
-	NONE = 0,
+enum class ButtonAction {
 	PLAY,
 	CONTINUE,
 	SETTINGS,
 	CREDITS,
 	QUIT,
-	BACK,
-	RESTART
+	GO_BACK,
+	RESTART,
+	CONTEXTUAL_1,
+	CONTEXTUAL_2,
+	CONTEXTUAL_3,
+	NONE
 };
 
 class GuiButton : public j1UI_Element
 {
 public:
-	GuiButton(j1Module* callback, bool isStatic);
+	GuiButton(j1Module* callback);
 	~GuiButton();
 
-	void Init(iPoint position, SDL_Rect normal_rect, SDL_Rect hover_rect, SDL_Rect click_rect, p2SString text, ButtonAction action = ButtonAction::NONE);
+	void Init(iPoint position, SDL_Rect normal_rect, SDL_Rect hover_rect, SDL_Rect click_rect, p2SString text, ButtonAction action = ButtonAction::NONE, bool stay_clicked = false);
 	bool Update(float dt);
 	bool CleanUp();
 	bool Input();
 	bool Draw();
 
 private:
-	SDL_Texture* tex;
-	SDL_Rect  click_rect;
+	SDL_Texture* texture;
 	SDL_Rect* current_rect;
-	SDL_Rect  normal_rect;
-	SDL_Rect  hover_rect;	
-	GuiText*  text;
+	SDL_Rect		normal_rect;
+	SDL_Rect		hover_rect;
+	SDL_Rect		click_rect;
+	GuiText* text;
 public:
 	ButtonAction	action;
+	bool stay_clicked;
 };
 
-#endif 
+#endif // !_GUIBUTTON_H_
+

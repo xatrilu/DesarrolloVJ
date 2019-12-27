@@ -8,7 +8,7 @@ class GuiImage : public j1UI_Element
 {
 public:
 	GuiImage();
-	GuiImage(j1Module* callback,bool Static);
+	GuiImage(j1Module* callback);
 	~GuiImage() {}
 
 	void Init(iPoint position, SDL_Rect section);
@@ -18,9 +18,9 @@ public:
 	bool Draw();
 
 public:
-	SDL_Texture* tex;
+	SDL_Texture* texture;
 	SDL_Rect section;
 };
 
-
 #endif // !_GUIIMAGE_H_
+

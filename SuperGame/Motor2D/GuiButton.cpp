@@ -7,29 +7,27 @@
 #include "p2SString.h"
 #include "j1Fonts.h"
 
-GuiButton::GuiButton(j1Module* g_callback, bool g_isStatic) 
-{
+GuiButton::GuiButton(j1Module* g_callback) {
 	callback = g_callback;
 	text = new GuiText();
 	click_rect = { 0,0,0,0 };
-	tex = nullptr;
+	texture = nullptr;
 	current_rect = &normal_rect;
-	isStatic = g_isStatic;
+	stay_clicked = false;
 }
 
-GuiButton::~GuiButton()
-{
+GuiButton::~GuiButton() {
 	delete text;
 }
 
-void GuiButton::Init(iPoint g_pos, SDL_Rect g_normal_rect, SDL_Rect g_hover_rect, SDL_Rect g_click_rect, p2SString g_text, ButtonAction g_action)
-{
-	screen_pos = g_pos;
-	tex = (SDL_Texture*)App->gui->GetAtlas();
+void GuiButton::Init(iPoint g_position, SDL_Rect g_normal_rect, SDL_Rect g_hover_rect, SDL_Rect g_click_rect, p2SString g_text, ButtonAction g_action, bool g_stay_clicked) {
+	screen_pos = g_position;
+	texture = (SDL_Texture*)App->gui->GetAtlas();
 	normal_rect = g_normal_rect;
 	hover_rect = g_normal_rect;
 	click_rect = g_click_rect;
 	action = g_action;
+	stay_clicked = g_stay_clicked;
 
 	if (parent != nullptr)
 	{
@@ -49,29 +47,49 @@ void GuiButton::Init(iPoint g_pos, SDL_Rect g_normal_rect, SDL_Rect g_hover_rect
 	text->Init({ text_rect.x, text_rect.y }, g_text);
 }
 
-bool GuiButton::Input() 
-{
-
-	current_rect = &click_rect;
-	callback->OnEvent(this, FocusEvent::CLICKED);
-	return true;
+bool GuiButton::CleanUp() {
+	bool ret = true;
+	text->CleanUp();
+	texture = nullptr;
+	return ret;
 }
 
-bool GuiButton::Update(float dt) 
-{
-	bool ret = true;
+bool GuiButton::Input() {
 
-	if (OnHover())
-	{
-		current_rect = &hover_rect;
-		if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
+	if (stay_clicked) {
+		if (current_rect == &click_rect)
+		{
+			current_rect = &normal_rect;
+		}
+		else
 		{
 			current_rect = &click_rect;
 		}
 	}
 	else
 	{
-		current_rect = &normal_rect;
+		current_rect = &click_rect;
+	}
+
+	callback->OnEvent(this, FocusEvent::CLICKED);
+	return true;
+}
+
+bool GuiButton::Update(float dt) {
+	bool ret = true;
+	if (!stay_clicked) {
+		if (OnHover())
+		{
+			current_rect = &hover_rect;
+			if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
+			{
+				current_rect = &click_rect;
+			}
+		}
+		else
+		{
+			current_rect = &normal_rect;
+		}
 	}
 
 	if (parent != nullptr)
@@ -79,14 +97,9 @@ bool GuiButton::Update(float dt)
 		screen_pos.x = parent->screen_pos.x + local_pos.x;
 		screen_pos.y = parent->screen_pos.y + local_pos.y;
 	}
-	rect.x = screen_pos.x;
-	rect.y = screen_pos.y;
 
-	if (isStatic)
-	{
-		rect.x = screen_pos.x - App->render->camera.x;
-		rect.y = screen_pos.y - App->render->camera.y;
-	}
+	rect.x = screen_pos.x - App->render->camera.x;
+	rect.y = screen_pos.y - App->render->camera.y;
 
 	if (text->text.Length() > 0)
 	{
@@ -96,18 +109,11 @@ bool GuiButton::Update(float dt)
 	return true;
 }
 
-bool GuiButton::Draw() 
-{
+bool GuiButton::Draw() {
 
-	App->render->Blit(tex, rect.x, rect.y, current_rect);
+	App->render->Blit(texture, rect.x, rect.y, current_rect);
 	if (text->text.Length() > 0) { text->Draw(); }
 
 	return true;
 }
 
-bool GuiButton::CleanUp()
-{
-	bool ret = true;
-
-	return ret;
-}

@@ -33,6 +33,7 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 {
 	frames = 0;
 	want_to_save = want_to_load = false;
+	quit = false;
 
 	input = new j1Input();
 	win = new j1Window();
@@ -174,6 +175,10 @@ bool j1App::Update()
 
 	if(ret == true)
 		ret = PostUpdate();
+
+	if (quit)
+		ret = false;
+
 
 	if (App->input->GetKey(SDL_SCANCODE_F4) == KEY_DOWN) 
 		pause = !pause;
@@ -463,4 +468,12 @@ bool j1App::SavegameNow() const {
 	data.reset();
 	want_to_save = false;
 	return ret;
+}
+
+void j1App::OnCommand(p2SString command) {
+
+	if (command == "quit")
+	{
+		quit = true;
+	}
 }

@@ -59,6 +59,7 @@ public:
 	void LoadGame();
 	void SaveGame() const;
 	void GetSaveGames(p2List<p2SString>& list_to_fill) const;
+	void OnCommand(p2SString command);
 
 private:
 
@@ -111,6 +112,7 @@ public:
 	bool pause = false;
 	bool vsync = false;
 	bool cap_enabled = true;
+	bool quit;
 
 private:
 
