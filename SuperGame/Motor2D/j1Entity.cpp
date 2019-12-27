@@ -8,12 +8,12 @@
 #include "j1Map.h"
 #include "p2Log.h"
 
-j1Entity::j1Entity(EntityType type) : j1EntityManager() {}
+j1Entity::j1Entity(EntityType type) {}
 
 j1Entity::~j1Entity() {}
 
 bool j1Entity::Awake(pugi::xml_node& config) {
-	
+
 	//config = config.child("")
 
 	return true;
@@ -44,7 +44,7 @@ bool j1Entity::PostUpdate() {
 void j1Entity::PathfindtoPlayer(int detection_range, j1Entity* player) {
 
 	//if the player is close we create a path to him
-	if ((abs(player->position.x - position.x) < detection_range)&&(player->state != DIE))
+	if ((player != nullptr) && (abs(player->position.x - position.x) < detection_range) && (player->state != DIE))
 	{
 		iPoint origin = App->map->WorldToMap(position.x, position.y);
 		iPoint destination = App->map->WorldToMap(player->position.x, player->position.y);
@@ -54,6 +54,7 @@ void j1Entity::PathfindtoPlayer(int detection_range, j1Entity* player) {
 	else { going_after_player = false; }
 
 	//pathfinding debug
+	/*
 	if (going_after_player)
 	{
 		int x, y;
@@ -69,7 +70,7 @@ void j1Entity::PathfindtoPlayer(int detection_range, j1Entity* player) {
 			if (App->collision->debug)App->render->DrawQuad(Debug_rect, 90, 850, 230, 40);
 		}
 	}
-
+	*/
 }
 
 bool j1Entity::LoadAnimations(const char* path) {
@@ -107,42 +108,42 @@ bool j1Entity::LoadAnimations(const char* path) {
 	while (animation != nullptr)
 	{
 		p2SString animation_name(animation.child("properties").child("property").attribute("name").as_string());
-			if (animation_name == "idle")
-				animations.add(&idle);
-			else if (animation_name == "walk")
-				animations.add(&walk);
-			else if (animation_name == "slide")
-				animations.add(&slide);
-			else if (animation_name == "run")
-				animations.add(&run);
-			else if (animation_name == "crouch_down")
-				animations.add(&crouch_down);
-			else if (animation_name == "crouch_up")
-				animations.add(&crouch_up);
-			else if (animation_name == "jump")
-				animations.add(&jump);
-			else if (animation_name == "fall")
-				animations.add(&fall);
-			else if (animation_name == "attack")
-				animations.add(&attack);
-			else if (animation_name == "die")
-				animations.add(&die);
-			else if (animation_name == "rest")
-				animations.add(&rest);
-			else goto CHANGE_ANIMATION;
+		if (animation_name == "idle")
+			animations.add(&idle);
+		else if (animation_name == "walk")
+			animations.add(&walk);
+		else if (animation_name == "slide")
+			animations.add(&slide);
+		else if (animation_name == "run")
+			animations.add(&run);
+		else if (animation_name == "crouch_down")
+			animations.add(&crouch_down);
+		else if (animation_name == "crouch_up")
+			animations.add(&crouch_up);
+		else if (animation_name == "jump")
+			animations.add(&jump);
+		else if (animation_name == "fall")
+			animations.add(&fall);
+		else if (animation_name == "attack")
+			animations.add(&attack);
+		else if (animation_name == "die")
+			animations.add(&die);
+		else if (animation_name == "rest")
+			animations.add(&rest);
+		else goto CHANGE_ANIMATION;
 
-			id = animation.attribute("id").as_int();
+		id = animation.attribute("id").as_int();
 
-			item_animation = animations.end;
+		item_animation = animations.end;
 
-			while (frame != nullptr) {
-				tile_id = frame.attribute("tileid").as_int();
-				speed = frame.attribute("duration").as_int() * 0.001f;
-				rect.x = rect.w * ((tile_id) % columns);
-				rect.y = rect.h * ((tile_id) / columns);
-				item_animation->data->PushBack(rect, speed);
-				frame = frame.next_sibling();
-			}
+		while (frame != nullptr) {
+			tile_id = frame.attribute("tileid").as_int();
+			speed = frame.attribute("duration").as_int() * 0.001f;
+			rect.x = rect.w * ((tile_id) % columns);
+			rect.y = rect.h * ((tile_id) / columns);
+			item_animation->data->PushBack(rect, speed);
+			frame = frame.next_sibling();
+		}
 
 	CHANGE_ANIMATION: animation = animation.next_sibling();
 		frame = animation.child("animation").child("frame");

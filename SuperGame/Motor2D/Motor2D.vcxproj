@@ -108,6 +108,7 @@
     <ClCompile Include="j1UI_Element.cpp" />
     <ClCompile Include="j1WalkingEnemy.cpp" />
     <ClCompile Include="j1WalkingEnemy2.cpp" />
+    <ClCompile Include="jCollectible.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="p2Log.cpp" />
     <ClCompile Include="j1Render.cpp" />
@@ -142,6 +143,7 @@
     <ClInclude Include="j1UI_Element.h" />
     <ClInclude Include="j1WalkingEnemy.h" />
     <ClInclude Include="j1WalkingEnemy2.h" />
+    <ClInclude Include="jCollectible.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="p2DynArray.h" />
     <ClInclude Include="j1Audio.h" />

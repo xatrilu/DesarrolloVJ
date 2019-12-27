@@ -45,13 +45,14 @@ public:
 public:
 	iPoint position = { 0, 0 };
 	iPoint lastPosition = { 0, 0 };
-	iPoint current_speed = {0, 0};
+	iPoint current_speed = { 0, 0 };
 	iPoint speed = { 0, 0 };
 	iPoint initialPosition = { 0, 0 };
 
 	int health = 0;
 	int damage = 0;
 	int detection_range = 0;
+	int score = 0;
 
 	bool grounded = false;
 	int	 gravity = 0;
@@ -61,7 +62,7 @@ public:
 	Collider* raycast = nullptr;
 	Collider* last_collider = nullptr;
 	Collider* attack_collider = nullptr;
-	
+
 	p2List<Animation*> animations;
 	Animation idle;
 	Animation walk;
