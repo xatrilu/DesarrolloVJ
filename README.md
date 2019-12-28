@@ -1,7 +1,3 @@
-# Introduction
-
-We are a group of students in the 2nd year of our Videogame Design and Videogame Development degree, and, as part of our subject of Videogame Development, we have created a platformer game in order to improve our knowledge of the subject.
-
 Using as a base the game *The Little Explorer* from one of our classmates (https://github.com/Windfog-Studios/The-Little-Explorer), we have added the following UI elements in order to make the game more enjoyable an easy to play:
 
 - An intro menu, with the buttons for the options of “Play”, “Continue”, “Settings”, “Credits” and “Exit”.
