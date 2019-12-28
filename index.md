@@ -12,7 +12,7 @@ Using as a base the game *The Little Explorer* from one of our classmates (https
 
 <div class="figure">
   <source>
-<img src="Web/Team%20photo.png" width = "800" height = "600" class ="inline">
+<img src="Web/Team%20photo.png" width = "290" height = "350" class ="inline">
 <p>
   
 Project made by:
