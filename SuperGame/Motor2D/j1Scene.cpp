@@ -135,7 +135,7 @@ bool j1Scene::Update(float dt)
 	camera_frame.y = -camera->y + camera_frame_y_margin;
 
 	//player inputs ---------------
-	if (visible_menu == Menu::NO_MENU)
+	if (visible_menu == Menu::SCREEN_UI)
 	{
 		if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
 			App->fadeBlack->FadeToBlack(current_level, LEVEL_1);
@@ -404,8 +404,7 @@ void j1Scene::UpdateScreenUI() {
 
 	if (time_text != nullptr)
 	{
-		time_left = max_time + time_discount - timer.ReadSec();
-		time_discount = 0;
+		time_left = max_time - timer.ReadSec();
 		p2SString temp("%i", time_left);
 		time_count->text = temp;
 		time_count->UpdateText();
@@ -534,6 +533,7 @@ void j1Scene::CreateSettingsScreen() {
 
 	GuiText* music_volume = (GuiText*)App->gui->CreateUIElement(UI_Type::TEXT, this, nullptr, false, true);
 	music_volume->Init({ 290,280 }, "Music Volume");
+	settings_screen.add(music_volume);
 }
 
 void j1Scene::CreateScreenUI()
