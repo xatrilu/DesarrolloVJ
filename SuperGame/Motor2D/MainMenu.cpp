@@ -21,13 +21,15 @@ MainMenu::MainMenu() : j1Module()
 
 MainMenu::~MainMenu() {}
 
-bool MainMenu::Awake(pugi::xml_node& config) {
+bool MainMenu::Awake(pugi::xml_node& config) 
+{
 	bool ret = true;
-
+	_TTF_Font* font = App->font->Load("fonts/Lotterdam.ttf", 50);
 	return ret;
 }
 
-bool MainMenu::Start() {
+bool MainMenu::Start()
+{
 	bool ret = true;
 
 	App->gui->Start();
@@ -41,12 +43,14 @@ bool MainMenu::Start() {
 	return ret;
 }
 
-bool MainMenu::PostUpdate() {
+bool MainMenu::PostUpdate() 
+{
 	bool ret = true;
 	return ret;
 }
 
-void MainMenu::OnEvent(j1UI_Element* element, FocusEvent event) {
+void MainMenu::OnEvent(j1UI_Element* element, FocusEvent event) 
+{
 
 	if ((element->type == UI_Type::BUTTON) && (event == FocusEvent::CLICKED))
 	{
@@ -142,10 +146,10 @@ void MainMenu::OnEvent(j1UI_Element* element, FocusEvent event) {
 	}
 }
 
-void MainMenu::CreateMainScreen() {
+void MainMenu::CreateMainScreen() 
+{
 	SDL_Rect camera;
 	camera = App->render->camera;
-	_TTF_Font* font = App->font->Load("fonts/Lotterdam.ttf", 50);
 
 	GuiImage* background = (GuiImage*)App->gui->CreateUIElement(UI_Type::IMAGE, this);
 	background->Init({ 0,0 }, { 0,0,(int)App->win->width, (int)App->win->height });
@@ -175,7 +179,6 @@ void MainMenu::CreateMainScreen() {
 
 void MainMenu::CreateSettingsScreen() 
 {
-
 	GuiImage* background = (GuiImage*)App->gui->CreateUIElement(UI_Type::IMAGE, this);
 	background->Init({ 0,0 }, { 0,0,(int)App->win->width,(int)App->win->height });
 	background->texture = App->tex->Load("sprites/UI/MenuBackground.jpg");
@@ -195,8 +198,8 @@ void MainMenu::CreateSettingsScreen()
 	visible_menu = Menu::SETTINGS;
 }
 
-void MainMenu::CreateCreditsScreen() {
-
+void MainMenu::CreateCreditsScreen()
+{
 	GuiImage* background = (GuiImage*)App->gui->CreateUIElement(UI_Type::IMAGE, this);
 	background->Init({ 0,0 }, { 0,0,(int)App->win->width,(int)App->win->height });
 	background->texture = App->tex->Load("sprites/UI/MenuBackground.jpg");
@@ -210,12 +213,6 @@ void MainMenu::CreateCreditsScreen() {
 	GuiImage* title = (GuiImage*)App->gui->CreateUIElement(UI_Type::IMAGE, this);
 	title->Init({ 100, 80 }, { 0,0,800, 150 });
 	title->texture = App->tex->Load("sprites/UI/Title.png");
-
-	GuiText* by = (GuiText*)App->gui->CreateUIElement(UI_Type::TEXT, this, nullptr);
-	by->Init({ 470, 200 }, "by");
-
-	/*GuiText* studio = (GuiText*)App->gui->CreateUIElement(UI_Type::TEXT, this, nullptr);
-	studio->Init({ 380,250 }, " ");*/
 
 	GuiButton* webpage = (GuiButton*)App->gui->CreateUIElement(UI_Type::BUTTON, this, nullptr, false, true);
 	webpage->Init({ 420,520 }, { 21,300,167,83 }, { 21,384,167,83 }, { 21,384,167,83 }, "Web", ButtonAction::CREDITS);

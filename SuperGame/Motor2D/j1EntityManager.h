@@ -70,11 +70,9 @@ public:
 	//sfx
 	uint walking_enemy_attack_fx;
 	uint flying_enemy_attack_fx;
-	uint walking_enemy2_attack_fx;
 
 	uint walking_enemy_die_fx;
 	uint flying_enemy_die_fx;
-	uint walking_enemy2_die_fx;
 
 	float time_between_updates;
 	float accumulated_time;

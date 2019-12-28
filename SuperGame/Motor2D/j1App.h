@@ -28,7 +28,6 @@ class j1Gui;
 class j1Fonts;
 class Console;
 class MainMenu;
-class j1FadeToBlack;
 
 
 class j1App
@@ -98,7 +97,6 @@ public:
 	j1Collision*		collision;
 	j1EntityManager*	entities;
 	j1PathFinding*		pathfinding;
-	j1FadeToBlack*		fade_to_black;
 	j1Gui*				gui;
 	j1Fonts*			font;
 	Console*			console;
@@ -140,6 +138,6 @@ private:
 	uint64				frame_count = 0;
 };
 
-extern j1App* App; // No student is asking me about that ... odd :-S
+extern j1App* App; 
 
 #endif

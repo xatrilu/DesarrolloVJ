@@ -7,6 +7,7 @@
 #include "p2SString.h"
 #include "j1Fonts.h"
 #include "p2Log.h"
+#include "j1Audio.h"
 
 GuiButton::GuiButton(j1Module* g_callback) {
 	callback = g_callback;
@@ -87,12 +88,12 @@ bool GuiButton::Update(float dt) {
 	bool ret = true;
 	if (!stay_clicked) {
 		if (OnHover())
-		{
-			current_rect = &hover_rect;
+		{			
 			if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
 			{
 				current_rect = &click_rect;
 			}
+			current_rect = &hover_rect;
 		}
 		else
 		{

@@ -58,7 +58,7 @@ public:
 
 	//fx
 	uint		jump_fx;
-	uint		double_Jump_fx = 4;
+	uint		double_Jump_fx;
 	p2SString	jump_fx_path;
 	p2SString	double_Jump_fx_path;
 

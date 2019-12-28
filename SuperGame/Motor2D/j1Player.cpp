@@ -546,8 +546,8 @@ void j1Player::OnCollision(Collider* c1, Collider* c2) {
 			break;
 		case TRIGGER:
 			if (c2->level_change) {
-				if (App->scene->current_level == LEVEL_1) App->fade_to_black->FadeToBlack(LEVEL_1, LEVEL_2);
-				if (App->scene->current_level == LEVEL_2) App->fade_to_black->FadeToBlack(LEVEL_2, LEVEL_1);
+				if (App->scene->current_level == LEVEL_1) App->fadeBlack->FadeToBlack(LEVEL_1, LEVEL_2);
+				if (App->scene->current_level == LEVEL_2) App->fadeBlack->FadeToBlack(LEVEL_2, LEVEL_1);
 				App->entities->blocked_movement = true;
 			}
 
@@ -573,7 +573,7 @@ void j1Player::OnCollision(Collider* c1, Collider* c2) {
 				App->audio->PlayFx(die_fx);
 				state = IDLE;
 				current_speed.x = current_speed.y = 0;
-				App->fade_to_black->FadeToBlack(App->scene->current_level, App->scene->current_level);
+				App->fadeBlack->FadeToBlack(App->scene->current_level, App->scene->current_level);
 				particles_created = true;
 				position = initialPosition;
 				lives--;
@@ -592,7 +592,7 @@ void j1Player::OnCollision(Collider* c1, Collider* c2) {
 					App->audio->PlayFx(die_fx);
 					state = IDLE;
 					current_speed.x = current_speed.y = 0;
-					App->fade_to_black->FadeToBlack(App->scene->current_level, App->scene->current_level);
+					App->fadeBlack->FadeToBlack(App->scene->current_level, App->scene->current_level);
 					particles_created = true;
 					position = initialPosition;
 					lives--;

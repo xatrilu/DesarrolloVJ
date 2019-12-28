@@ -138,15 +138,15 @@ bool j1Scene::Update(float dt)
 	if (visible_menu == Menu::NO_MENU)
 	{
 		if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
-			App->fade_to_black->FadeToBlack(current_level, LEVEL_1);
+			App->fadeBlack->FadeToBlack(current_level, LEVEL_1);
 		}
 
 		if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) {
-			App->fade_to_black->FadeToBlack(current_level, LEVEL_2);
+			App->fadeBlack->FadeToBlack(current_level, LEVEL_2);
 		}
 
 		if (App->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
-			App->fade_to_black->FadeToBlack(current_level, current_level);
+			App->fadeBlack->FadeToBlack(current_level, current_level);
 			App->entities->player_pointer->position = App->entities->player_pointer->initialPosition;
 		}
 

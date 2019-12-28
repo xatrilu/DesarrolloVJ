@@ -87,10 +87,10 @@ public:
 
 	bool going_after_player = false;
 
-	uint		die_fx = 0;
+	uint		die_fx;
 	p2SString	die_fx_path;
 
-	uint		attack_fx = 2;
+	uint		attack_fx;
 	p2SString	attack_fx_path;
 
 	bool playing_fx = false;

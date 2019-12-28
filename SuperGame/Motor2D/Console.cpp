@@ -184,7 +184,7 @@ void Console::DestroyInterface() {
 
 	for (p2List_item<GuiText*>* item = on_screen_log.start; item != nullptr; item = item->next)
 	{
-		App->gui->DestroyUIElement(item->data);
+		item->data->text = nullptr;
 	}
 
 	isVisible = false;
@@ -199,27 +199,15 @@ void Console::AddLogText(p2SString new_text) {
 		{
 			log_record.del(log_record.start);
 		}
-
+		log_record.add(new_text);
 		if (isVisible)
 		{
-			p2List_item<GuiText*>* item = on_screen_log.start;
-			for (p2List_item<p2SString>* log_text = log_record.start; log_text != nullptr; log_text = log_text->next)
+			p2List_item<p2SString>* item2 = log_record.end;
+			for (p2List_item<GuiText*>* item = on_screen_log.end; item != nullptr; item = item->prev)
 			{
-				if (item == nullptr)
-				{
-					GuiText* new_log = new GuiText(this);
-					new_log->Init({ 20, (int)(on_screen_log.end->data->screen_pos.y + on_screen_log.end->data->rect.h) }, log_text->data, CONSOLE_FONT);
-					on_screen_log.add(new_log);
-					item = on_screen_log.end;
-				}
-				else {
-					item->data->text = log_text->data;
-					item = item->next;
-				}
+				item->data->text = item2->data;
 			}
 		}
-
-		log_record.add(new_text);
 	}
 }
 

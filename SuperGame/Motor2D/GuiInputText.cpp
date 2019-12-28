@@ -84,7 +84,7 @@ bool GuiInputText::Update(float dt) {
 	if (text->text.GetCapacity() > 0)
 	{
 		App->font->CalcSize(text->text.GetString(), width, cursor.y, App->font->console_font);
-		cursor.x = background->GetScreenRect().x + cursor.w + 10 + width;
+		cursor.x = background->GetScreenRect().x + cursor.w + 20 + width;
 		cursor.y = rect.y + rect.h * 0.5f - cursor.h * 0.5f;
 	}
 
