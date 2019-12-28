@@ -10,6 +10,10 @@ Using as a base the game *The Little Explorer* from one of our classmates (https
 
 # Team Members
 
+<div class="figure">
+  <source>
+<img src="Web/Team%20photo.png" width = "800" height = "600" class ="inline">
+
 Project made by:
 
 * Xavi Trillo
@@ -20,3 +24,13 @@ Project made by:
 
 [https://github.com/Avilgor](https://github.com/Avilgor)
 
+
+# Release and code repository
+
+If you want to try our game, you can check the latest release by clicking on the following link:
+
+[Download our latest release](https://github.com/xatrilu/DesarrolloVJ/releases)
+
+if you want to check the code repository, you can do so by clicking this link instead: 
+
+[Code repository](https://github.com/xatrilu/DesarrolloVJ)
