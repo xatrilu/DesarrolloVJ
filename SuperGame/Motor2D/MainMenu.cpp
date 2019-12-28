@@ -156,13 +156,13 @@ void MainMenu::CreateMainScreen() {
 	title->texture = App->tex->Load("sprites/UI/Title.png");
 
 	GuiButton* startBtn = (GuiButton*)App->gui->CreateUIElement(UI_Type::BUTTON, this, nullptr, false, true);
-	startBtn->Init({ 400, 330 }, { 6,547,200,72 }, { 206,547,200,72 }, { 206,547,200,72 }, "Start", ButtonAction::PLAY);
+	startBtn->Init({ 400, 330 }, { 3,390,804,296 }, { 206,547,200,72 }, { 206,547,200,72 }, "Start", ButtonAction::PLAY);
 
 	GuiButton* continueBtn = (GuiButton*)App->gui->CreateUIElement(UI_Type::BUTTON, this, nullptr, false, true);
-	continueBtn->Init({ 400, 440 }, { 8,622,196,71 }, { 206,622,196,71 }, { 206,622,200,72 }, "Continue", ButtonAction::CONTINUE);
+	continueBtn->Init({ 400, 440 }, { 3,390,804,296 }, { 206,622,196,71 }, { 206,622,200,72 }, "Continue", ButtonAction::CONTINUE);
 
 	GuiButton* settingsBtn = (GuiButton*)App->gui->CreateUIElement(UI_Type::BUTTON, this, nullptr, false, true);
-	settingsBtn->Init({ 400, 540 }, { 6,547,200,72 }, { 206,547,200,72 }, { 206,547,200,72 }, "Settings", ButtonAction::SETTINGS);
+	settingsBtn->Init({ 400, 540 }, { 3,390,804,296 }, { 206,547,200,72 }, { 206,547,200,72 }, "Settings", ButtonAction::SETTINGS);
 
 	GuiButton* exitBtn = (GuiButton*)App->gui->CreateUIElement(UI_Type::BUTTON, this, nullptr, false, true);
 	exitBtn->Init({ 50, 626 }, { 8,622,196,71 }, { 206,622,196,71 }, { 206,622,200,72 }, "Exit", ButtonAction::QUIT);
