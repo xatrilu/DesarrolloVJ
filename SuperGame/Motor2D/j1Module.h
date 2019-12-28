@@ -1,3 +1,8 @@
+// ----------------------------------------------------
+// j1Module.h
+// Interface for all engine modules
+// ----------------------------------------------------
+
 #ifndef __j1MODULE_H__
 #define __j1MODULE_H__
 
@@ -8,7 +13,7 @@ class j1App;
 struct Collider;
 class j1UI_Element;
 enum class FocusEvent;
-class ConsoleCommands;
+class j1Command;
 
 class j1Module
 {
@@ -64,9 +69,9 @@ public:
 
 	virtual void OnCollision(Collider* c1, Collider* c2) {}
 
-	virtual void OnEvent(j1UI_Element* element, FocusEvent event) {}
+	virtual void OnEvent(j1UI_Element*, FocusEvent) {}
 
-	virtual void Command(ConsoleCommands* comm) {};
+	virtual void OnCommand(p2SString) {};
 
 public:
 

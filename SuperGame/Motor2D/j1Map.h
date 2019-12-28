@@ -46,7 +46,7 @@ struct MapLayer
 	p2SString	name;
 	int			width;
 	int			height;
-	uint*		data;
+	uint* data;
 	Properties	properties;
 	float		ParallaxSpeed;
 	float		ParallaxSpeed2;
@@ -75,8 +75,8 @@ struct TileSet
 	int					spacing;
 	int					tile_width;
 	int					tile_height;
-	SDL_Texture*		texture;
-	SDL_Texture*		parallax;
+	SDL_Texture* texture;
+	SDL_Texture* parallax;
 	int					tex_width;
 	int					tex_height;
 	int					num_tiles_width;
@@ -87,7 +87,7 @@ struct TileSet
 
 enum ObjectType {
 	COLLIDER,
-	ENEMY
+	ENTITY
 };
 
 struct Object {
@@ -148,7 +148,7 @@ public:
 	bool Load(const char* path);
 
 	int GetXPosition(int x) { return x * data.tile_width; }
-	int GetYPosition(int y) { return y * data.tile_height;}
+	int GetYPosition(int y) { return y * data.tile_height; }
 
 	iPoint MapToWorld(int x, int y) const;
 	iPoint WorldToMap(int x, int y) const;
@@ -181,6 +181,8 @@ private:
 
 	p2SString level_1_music;
 	p2SString level_2_music;
+	iPoint level_1_initial_camera_position;
+	iPoint level_2_initial_camera_position;
 
 };
 

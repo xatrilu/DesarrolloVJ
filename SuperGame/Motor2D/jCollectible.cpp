@@ -4,7 +4,7 @@
 #include "j1Player.h"
 #include "j1Textures.h"
 
-jCollectible::jCollectible() : j1Entity(EntityType::COLLECTIBLE) {
+j1Collectible::j1Collectible() : j1Entity(EntityType::COLLECTIBLE) {
 
 	name.create("collectible");
 	type = EntityType::COLLECTIBLE;
@@ -20,26 +20,26 @@ jCollectible::jCollectible() : j1Entity(EntityType::COLLECTIBLE) {
 	current_animation = &idle;
 }
 
-jCollectible::~jCollectible() {}
+j1Collectible::~j1Collectible() {}
 
-bool jCollectible::Awake(pugi::xml_node& config) {
+bool j1Collectible::Awake(pugi::xml_node& config) {
 	bool ret = true;
 	return true;
 }
 
-bool jCollectible::Update(float dt) {
+bool j1Collectible::Update(float dt) {
 	bool ret = true;
 	collider->SetPos(position.x, position.y);
 	return ret;
 }
 
-bool jCollectible::PostUpdate() {
+bool j1Collectible::PostUpdate() {
 	bool ret = true;
 	ret = App->render->Blit(texture, position.x, position.y, &current_animation->GetCurrentFrame());
 	return ret;
 }
 
-bool jCollectible::CleanUp() {
+bool j1Collectible::CleanUp() {
 	bool ret = true;
 	texture = nullptr;
 	if (collider != nullptr) {
@@ -49,7 +49,7 @@ bool jCollectible::CleanUp() {
 	return ret;
 }
 
-void jCollectible::OnCollision(Collider* c1, Collider* c2) {
+void j1Collectible::OnCollision(Collider* c1, Collider* c2) {
 
 	switch (c2->type)
 	{

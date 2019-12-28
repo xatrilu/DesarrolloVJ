@@ -1,12 +1,12 @@
-#ifndef _jCOLLECTIBLE_H_
-#define _jCOLLECTIBLE_H_
+#ifndef _j1COLLECTIBLE_H_
+#define _j1COLLECTIBLE_H_
 #include "j1Entity.h"
 
-class jCollectible : public j1Entity
+class j1Collectible : public j1Entity
 {
 public:
-	jCollectible();
-	~jCollectible();
+	j1Collectible();
+	~j1Collectible();
 
 	bool Awake(pugi::xml_node& config);
 	bool Update(float dt);
@@ -18,5 +18,5 @@ private:
 	j1Player* player;
 };
 
-#endif // !_j1COLLECTIBLE_H_
+#endif 
 

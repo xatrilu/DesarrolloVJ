@@ -29,7 +29,7 @@ public:
 
 	p2SString(unsigned int size)
 	{
-		if(size > 0)
+		if (size > 0)
 			Alloc(size);
 		else
 			Alloc(1);
@@ -43,11 +43,11 @@ public:
 		strcpy_s(str, size, string.str);
 	}
 
-	p2SString(const char *format, ...)
+	p2SString(const char* format, ...)
 	{
 		size = 0;
 
-		if(format != NULL)
+		if (format != NULL)
 		{
 			static char tmp[TMP_STRING_SIZE];
 			static va_list  ap;
@@ -57,32 +57,32 @@ public:
 			int res = vsprintf_s(tmp, TMP_STRING_SIZE, format, ap);
 			va_end(ap);
 
-			if(res > 0)
+			if (res > 0)
 			{
 				Alloc(res + 1);
 				strcpy_s(str, size, tmp);
 			}
 		}
 
-		if(size == 0)
+		if (size == 0)
 		{
 			Alloc(1);
 			Clear();
 		}
 	}
-	
+
 	// Destructor
 	virtual ~p2SString()
 	{
-		if(str != NULL)
+		if (str != NULL)
 			delete[] str;
 	}
 
-	const p2SString& create(const char *format, ...)
+	const p2SString& create(const char* format, ...)
 	{
 		size = 0;
 
-		if(format != NULL)
+		if (format != NULL)
 		{
 			static char tmp[TMP_STRING_SIZE];
 			static va_list  ap;
@@ -92,14 +92,14 @@ public:
 			int res = vsprintf_s(tmp, TMP_STRING_SIZE, format, ap);
 			va_end(ap);
 
-			if(res > 0)
+			if (res > 0)
 			{
 				Alloc(res + 1);
 				strcpy_s(str, size, tmp);
 			}
 		}
 
-		if(size == 0)
+		if (size == 0)
 		{
 			Alloc(1);
 			Clear();
@@ -116,7 +116,7 @@ public:
 
 	bool operator== (const char* string) const
 	{
-		if(string != NULL)
+		if (string != NULL)
 			return strcmp(string, str) == 0;
 		return false;
 	}
@@ -128,14 +128,14 @@ public:
 
 	bool operator!= (const char* string) const
 	{
-		if(string != NULL)
+		if (string != NULL)
 			return strcmp(string, str) != 0;
 		return true;
 	}
-	
+
 	const p2SString& operator= (const p2SString& string)
 	{
-		if(string.Length() + 1 > size)
+		if (string.Length() + 1 > size)
 		{
 			delete[] str;
 			Alloc(string.Length() + 1);
@@ -154,12 +154,12 @@ public:
 		(*this) = t;
 		return *this;
 
-		if(string != NULL)
+		if (string != NULL)
 		{
-			if(strlen(string) + 1 > size)
+			if (strlen(string) + 1 > size)
 			{
 				delete[] str;
-				Alloc(strlen(string)+1);
+				Alloc(strlen(string) + 1);
 			}
 			else
 				Clear();
@@ -173,12 +173,12 @@ public:
 
 		return(*this);
 	}
-	
+
 	const p2SString& operator+= (const p2SString& string)
 	{
 		unsigned int need_size = string.Length() + Length() + 1;
 
-		if(need_size > size)
+		if (need_size > size)
 		{
 			char* tmp = str;
 			Alloc(need_size);
@@ -193,11 +193,11 @@ public:
 
 	const p2SString& operator+= (const char* string)
 	{
-		if(string != NULL)
+		if (string != NULL)
 		{
 			unsigned int need_size = strlen(string) + Length() + 1;
 
-			if(need_size > size)
+			if (need_size > size)
 			{
 				char* tmp = str;
 				Alloc(need_size);
@@ -236,16 +236,16 @@ public:
 	{
 		uint len = Length();
 
-		if(end >= len || end == 0)
+		if (end >= len || end == 0)
 			end = len - 1;
 
-		if(begin > len || end <= begin)
+		if (begin > len || end <= begin)
 			return false;
 
 		char* p1 = str + begin;
 		char* p2 = str + end + 1;
 
-		while(*p1++ = *p2++);
+		while (*p1++ = *p2++);
 
 		return true;
 	}
@@ -254,33 +254,33 @@ public:
 	{
 		// cut right --
 		char* end = str + size;
-		while(*--end == ' ') *end = '\0';
+		while (*--end == ' ') *end = '\0';
 
 		// cut left --
 		char* start = str;
-		while(*++start == ' ');
+		while (*++start == ' ');
 
 		uint s = strlen(start);
 
-		for(uint i = 0; i < s + 1; ++i)
+		for (uint i = 0; i < s + 1; ++i)
 			str[i] = start[i];
 	}
 
-	uint Substitute(const char* src, const char *dst)
+	uint Substitute(const char* src, const char* dst)
 	{
 		assert(src);
 		assert(dst);
 
 		uint instances = Find(src);
 
-		if(instances > 0)
+		if (instances > 0)
 		{
 			uint src_len = strlen(src);
 			uint dst_len = strlen(dst);
 			uint diff = dst_len - src_len;
 			uint needed_size = 1 + strlen(str) + (diff * instances);
 
-			if(size < needed_size)
+			if (size < needed_size)
 			{
 				char* tmp = str;
 				Alloc(needed_size);
@@ -288,24 +288,24 @@ public:
 				delete tmp;
 			}
 
-			for(uint i = 0; i < size - src_len; ++i)
+			for (uint i = 0; i < size - src_len; ++i)
 			{
-				if(strncmp(src, &str[i], src_len) == 0)
+				if (strncmp(src, &str[i], src_len) == 0)
 				{
 					// make room
-					for(uint j = strlen(str) + diff; j > i + diff; --j)
+					for (uint j = strlen(str) + diff; j > i + diff; --j)
 					{
 						str[j] = str[j - diff];
 					}
 
 					// copy
-					for(uint j = 0; j < dst_len; ++j)
+					for (uint j = 0; j < dst_len; ++j)
 					{
 						str[i++] = dst[j];
 					}
 				}
 			}
-			
+
 		}
 
 		return instances;
@@ -314,14 +314,14 @@ public:
 	uint Find(const char* string) const
 	{
 		uint ret = 0;
-		
-		if(string != NULL)
+
+		if (string != NULL)
 		{
 			uint len = strlen(string);
 
-			for(uint i = 0; i < size - len; ++i)
+			for (uint i = 0; i < size - len; ++i)
 			{
-				if(strncmp(string, &str[i], len) == 0)
+				if (strncmp(string, &str[i], len) == 0)
 				{
 					i += len;
 					++ret;
@@ -337,13 +337,13 @@ public:
 	*/
 	uint SubString(unsigned int start, unsigned int end, p2SString& buffer) const
 	{
-		if(str != NULL)
+		if (str != NULL)
 		{
 			start = MIN(start, size);
 			end = (end == 0) ? size : MIN(end, size);
 			uint s = end - start;
 
-			if(s > buffer.size)
+			if (s > buffer.size)
 			{
 				char* tmp = buffer.str;
 				buffer.Alloc(s);
@@ -357,7 +357,7 @@ public:
 			return 0;
 	}
 
-	p2SString lowercase() {
+	p2SString lowercased() {
 		int l = Length();
 		char* lowercased = new char[l];
 

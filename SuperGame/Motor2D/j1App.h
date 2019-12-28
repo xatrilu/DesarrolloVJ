@@ -17,7 +17,6 @@ class j1Scene;
 class j1Map;
 class j1Particles;
 class j1Collision;
-class j1UI;
 class j1EntityManager;
 class j1PathFinding;
 class j1WalkingEnemy;
@@ -97,7 +96,6 @@ public:
 	j1Map*				map;
 	j1Particles*		particles;
 	j1Collision*		collision;
-	j1UI*				ui;
 	j1EntityManager*	entities;
 	j1PathFinding*		pathfinding;
 	j1FadeToBlack*		fade_to_black;
@@ -113,6 +111,7 @@ public:
 	bool vsync = false;
 	bool cap_enabled = true;
 	bool quit;
+	double	framerate_cap;
 
 private:
 
@@ -124,7 +123,6 @@ private:
 
 	p2SString			title;
 	p2SString			organization;
-	double				framerate_cap;
 
 	//save-load
 	mutable bool		want_to_save;

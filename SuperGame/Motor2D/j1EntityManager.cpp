@@ -13,7 +13,7 @@
 #include "j1Particles.h"
 #include "j1WalkingEnemy.h"
 #include "j1FlyingEnemy.h"
-#include "j1Collectible.h"
+#include "jCollectible.h"
 #include "brofiler/Brofiler/Brofiler.h"
 
 

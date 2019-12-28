@@ -68,7 +68,8 @@ public:
 	// Get mouse / axis position
 	void GetMousePosition(int& x, int& y);
 	void GetMouseMotion(int& x, int& y);
-	void EnableTxtInput(bool enable);
+
+	void EnableTextInput(bool enable);
 
 private:
 	bool		windowEvents[WE_COUNT];
@@ -78,11 +79,11 @@ private:
 	int			mouse_motion_y;
 	int			mouse_x;
 	int			mouse_y;
-	GuiText*    text_receiver;
+	GuiText* text_receiver;
 public:
 	char* text;
 	char* composition;
-	uint32		mouse;
+	uint32		cursor;
 	uint32		selection_len;
 };
 

@@ -13,20 +13,17 @@
 #include "j1App.h"
 #include "j1Player.h"
 #include "j1WalkingEnemy.h"
-#include "j1WalkingEnemy2.h"
 #include "j1FlyingEnemy.h"
-#include "j1Trap.h"
 #include "j1Particles.h"
 #include "j1Collision.h"
-#include "j1UI.h"
 #include "j1EntityManager.h"
 #include "j1Pathfinding.h"
 #include "j1FadeToBlack.h"
 #include "j1Gui.h"
 #include "j1Fonts.h"
-#include "Console.h"
-#include "j1FadeToBlack.h"
 #include "MainMenu.h"
+#include "Console.h"
+#include "ConsoleCommands.h"
 #include "brofiler/Brofiler/Brofiler.h"
 
 // Constructor
@@ -46,7 +43,6 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	entities = new j1EntityManager();
 	particles = new j1Particles();
 	collision = new j1Collision();
-	ui = new j1UI();
 	pathfinding = new j1PathFinding();
 	fade_to_black = new j1FadeToBlack();
 	gui = new j1Gui();
@@ -66,7 +62,6 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(entities);
 	AddModule(particles);
 	AddModule(collision);
-	AddModule(ui);
 	AddModule(pathfinding);
 	AddModule(fade_to_black);
 	AddModule(gui);

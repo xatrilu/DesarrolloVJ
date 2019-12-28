@@ -104,10 +104,8 @@
     <ClCompile Include="j1Collision.cpp" />
     <ClCompile Include="j1Particles.cpp" />
     <ClCompile Include="j1Timer.cpp" />
-    <ClCompile Include="j1UI.cpp" />
     <ClCompile Include="j1UI_Element.cpp" />
     <ClCompile Include="j1WalkingEnemy.cpp" />
-    <ClCompile Include="j1WalkingEnemy2.cpp" />
     <ClCompile Include="jCollectible.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="p2Log.cpp" />
@@ -115,7 +113,6 @@
     <ClCompile Include="j1Textures.cpp" />
     <ClCompile Include="j1Window.cpp" />
     <ClCompile Include="PugiXml\src\pugixml.cpp" />
-    <ClCompile Include="j1Trap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -138,11 +135,8 @@
     <ClInclude Include="j1Collision.h" />
     <ClInclude Include="j1Particles.h" />
     <ClInclude Include="j1Timer.h" />
-    <ClInclude Include="j1Trap.h" />
-    <ClInclude Include="j1UI.h" />
     <ClInclude Include="j1UI_Element.h" />
     <ClInclude Include="j1WalkingEnemy.h" />
-    <ClInclude Include="j1WalkingEnemy2.h" />
     <ClInclude Include="jCollectible.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="p2DynArray.h" />

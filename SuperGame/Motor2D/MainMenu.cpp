@@ -95,7 +95,7 @@ void MainMenu::OnEvent(j1UI_Element* element, FocusEvent event) {
 			}
 			break;
 
-		case ButtonAction::BACK:
+		case ButtonAction::GO_BACK:
 			App->gui->DestroyAllGui();
 			CreateMainScreen();
 			break;
@@ -149,10 +149,10 @@ void MainMenu::CreateMainScreen() {
 
 	GuiImage* background = (GuiImage*)App->gui->CreateUIElement(UI_Type::IMAGE, this);
 	background->Init({ 0,0 }, { 0,0,(int)App->win->width, (int)App->win->height });
-	background->texture = App->tex->Load("sprites/UI/MenuBackground.png");
+	background->texture = App->tex->Load("sprites/UI/MenuBackground.jpg");
 
 	GuiImage* title = (GuiImage*)App->gui->CreateUIElement(UI_Type::IMAGE, this);
-	title->Init({ 200,100 }, { 0,0,600, 180 });
+	title->Init({ 100,100 }, { 0,0,800, 150 });
 	title->texture = App->tex->Load("sprites/UI/Title.png");
 
 	GuiButton* startBtn = (GuiButton*)App->gui->CreateUIElement(UI_Type::BUTTON, this, nullptr, false, true);
@@ -178,13 +178,13 @@ void MainMenu::CreateSettingsScreen()
 
 	GuiImage* background = (GuiImage*)App->gui->CreateUIElement(UI_Type::IMAGE, this);
 	background->Init({ 0,0 }, { 0,0,(int)App->win->width,(int)App->win->height });
-	background->texture = App->tex->Load("sprites/UI/MenuBackground.png");
+	background->texture = App->tex->Load("sprites/UI/MenuBackground.jpg");
 
 	GuiImage* menuBackground = (GuiImage*)App->gui->CreateUIElement(UI_Type::IMAGE, this);
 	menuBackground->Init({ 250, 250 }, { 0,0,512,264 });
 
 	GuiButton* backBtn = (GuiButton*)App->gui->CreateUIElement(UI_Type::BUTTON, this, nullptr, false, true);
-	backBtn->Init({ 20, 20 }, { 897,618,114,94 }, { 897,618,114,94 }, { 897,618,114,94 }, "", ButtonAction::BACK);
+	backBtn->Init({ 20, 20 }, { 897,618,114,94 }, { 897,618,114,94 }, { 897,618,114,94 }, "", ButtonAction::GO_BACK);
 
 	GuiButton* fullscreenBtn = (GuiButton*)App->gui->CreateUIElement(UI_Type::BUTTON, this, nullptr, false, true);
 	fullscreenBtn->Init({ 300,410 }, { 206, 697, 49,53 }, { 206, 697, 49,53 }, { 262,697,49,53 }, "", ButtonAction::CONTEXTUAL_1, true);
@@ -199,16 +199,16 @@ void MainMenu::CreateCreditsScreen() {
 
 	GuiImage* background = (GuiImage*)App->gui->CreateUIElement(UI_Type::IMAGE, this);
 	background->Init({ 0,0 }, { 0,0,(int)App->win->width,(int)App->win->height });
-	background->texture = App->tex->Load("sprites/UI/MenuBackground.png");
+	background->texture = App->tex->Load("sprites/UI/MenuBackground.jpg");
 
 	GuiImage* panel = (GuiImage*)App->gui->CreateUIElement(UI_Type::IMAGE, this);
 	panel->Init({ 140,160 }, { 0,1062,726,522 });
 
 	GuiButton* go_back_button = (GuiButton*)App->gui->CreateUIElement(UI_Type::BUTTON, this, nullptr, false, true);
-	go_back_button->Init({ 20, 20 }, { 897,618,114,94 }, { 897,618,114,94 }, { 897,618,114,94 }, "", ButtonAction::BACK);
+	go_back_button->Init({ 20, 20 }, { 897,618,114,94 }, { 897,618,114,94 }, { 897,618,114,94 }, "", ButtonAction::GO_BACK);
 
 	GuiImage* title = (GuiImage*)App->gui->CreateUIElement(UI_Type::IMAGE, this);
-	title->Init({ 190, 80 }, { 0,0,600, 180 });
+	title->Init({ 100, 80 }, { 0,0,800, 150 });
 	title->texture = App->tex->Load("sprites/UI/Title.png");
 
 	GuiText* by = (GuiText*)App->gui->CreateUIElement(UI_Type::TEXT, this, nullptr);

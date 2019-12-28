@@ -10,15 +10,14 @@ class j1Module;
 class ConsoleCommands
 {
 public:
-	ConsoleCommands(const char* g_command, j1Module* g_callback, uint min_arg, uint max_args, const char* info);
+	ConsoleCommands(const char* g_command, j1Module* g_callback, const char* explanation);
 	~ConsoleCommands();
+	bool CleanUp();
 
 public:
 	p2SString text;
 	j1Module* callback;
-	uint max_args;
-	uint min_args;
-	const char* info;
+	const char* explanation;
 };
 
-#endif
+#endif // !_j1COMMAND_H_	

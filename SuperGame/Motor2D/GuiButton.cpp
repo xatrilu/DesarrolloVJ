@@ -18,6 +18,10 @@ GuiButton::GuiButton(j1Module* g_callback) {
 
 GuiButton::~GuiButton() {
 	delete text;
+	delete texture;
+	parent = nullptr;
+	texture = nullptr;
+	callback = nullptr;
 }
 
 void GuiButton::Init(iPoint g_position, SDL_Rect g_normal_rect, SDL_Rect g_hover_rect, SDL_Rect g_click_rect, p2SString g_text, ButtonAction g_action, bool g_stay_clicked) {
@@ -50,6 +54,8 @@ void GuiButton::Init(iPoint g_position, SDL_Rect g_normal_rect, SDL_Rect g_hover
 bool GuiButton::CleanUp() {
 	bool ret = true;
 	text->CleanUp();
+	delete text;
+	text = nullptr;
 	texture = nullptr;
 	return ret;
 }
@@ -70,8 +76,9 @@ bool GuiButton::Input() {
 	{
 		current_rect = &click_rect;
 	}
-
-	callback->OnEvent(this, FocusEvent::CLICKED);
+	if (callback != NULL) {
+		callback->OnEvent(this, FocusEvent::CLICKED);
+	}
 	return true;
 }
 

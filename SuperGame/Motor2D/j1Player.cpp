@@ -12,8 +12,8 @@
 #include "j1Particles.h"
 #include "j1EntityManager.h"
 #include "j1FadeToBlack.h"
-#include "j1Console.h"
-#include "j1Command.h"
+#include "Console.h"
+#include "ConsoleCommands.h"
 #include "brofiler/Brofiler/Brofiler.h"
 
 j1Player::j1Player() :j1Entity(EntityType::PLAYER) {
@@ -65,6 +65,7 @@ j1Player::j1Player() :j1Entity(EntityType::PLAYER) {
 
 		isVisible = true;
 		grounded = false;
+
 		current_speed = { 0,0 };
 		last_score = 0;
 

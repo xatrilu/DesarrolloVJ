@@ -12,7 +12,7 @@ enum class ButtonAction {
 	SETTINGS,
 	CREDITS,
 	QUIT,
-	BACK,
+	GO_BACK,
 	RESTART,
 	CONTEXTUAL_1,
 	CONTEXTUAL_2,

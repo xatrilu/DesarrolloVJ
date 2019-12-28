@@ -12,12 +12,9 @@
 #include "brofiler/Brofiler/Brofiler.h"
 
 j1FlyingEnemy::j1FlyingEnemy() :j1Entity(EntityType::FLYING_ENEMY) {
+
 	name.create("flying_enemy");
-
-	//variables from EntityManager
 	type = EntityType::FLYING_ENEMY;
-	player = App->entities->player;
-
 
 	//copy variables from reference_enemy
 	if (App->entities->reference_flying_enemy != nullptr)
@@ -37,15 +34,19 @@ j1FlyingEnemy::j1FlyingEnemy() :j1Entity(EntityType::FLYING_ENEMY) {
 		attack = idle;
 		run = idle;
 		current_animation = &idle;
+
+		player = App->entities->player_pointer;
+
+		//colliders
+		collider = App->collision->AddCollider({ 2000,200,45,26 }, COLLIDER_ENEMY, (j1Module*)this);
+		raycast = App->collision->AddCollider({ 2000,200,20,2 }, COLLIDER_ENEMY, (j1Module*)this);
+
+		score = 15;
 	}
 
 	initialPosition = position;
 	lastPosition = position;
 	flip = SDL_FLIP_NONE;
-
-	//colliders
-	collider = App->collision->AddCollider({ 0,66,45,26 }, COLLIDER_ENEMY, (j1Module*)this);
-	raycast = App->collision->AddCollider({ 16,34,20,2},COLLIDER_ENEMY, (j1Module*)this);
 }
 
 j1FlyingEnemy::~j1FlyingEnemy() {
@@ -69,24 +70,34 @@ bool j1FlyingEnemy::Awake(pugi::xml_node& config) {
 	die_fx_path = config.child("die3FX").attribute("source").as_string();
 
 	die_fx = App->audio->LoadFx(die_fx_path.GetString());
-	
+
 
 	LoadAnimations("Animations_flyingEnemy1.tmx");
 
 	return ret;
 }
 
+bool j1FlyingEnemy::CleanUp() {
+	bool ret = true;
+	texture = nullptr;
+	if (collider != nullptr)
+	{
+		collider->to_delete = true;
+		collider = nullptr;
+		raycast->to_delete = true;
+		raycast = nullptr;
+	}
+	return ret;
+}
+
 bool j1FlyingEnemy::Update(float dt) {
 	BROFILER_CATEGORY("FlyingEnemyUpdate", Profiler::Color::Tomato)
-	bool ret = true;
+		bool ret = true;
 	lastPosition = position;
-
-	//guard path
-	//if ((position.x < path_minimum)||(position.x > path_maximum)) current_speed.x -= current_speed.x;
 
 	//pathfind
 	PathfindtoPlayer(detection_range, player);
-	
+
 	//movement
 	if ((path_to_player != nullptr) && (path_to_player->Count() != 0))
 	{
@@ -100,7 +111,7 @@ bool j1FlyingEnemy::Update(float dt) {
 		destination.x = path_to_player->At(path_to_player->Count() - 1)->x;
 		destination.y = path_to_player->At(path_to_player->Count() - 1)->y;
 
-		if (current_map_position.x == tile_to_go.x){
+		if (current_map_position.x == tile_to_go.x) {
 			i++;
 			if (i > 2) tile_to_go = App->map->WorldToMap(path_to_player->At(i)->x, path_to_player->At(i)->y);
 		}
@@ -118,16 +129,16 @@ bool j1FlyingEnemy::Update(float dt) {
 			//LOG("Going up");
 			current_speed.y = -speed.y;
 		}
-		if ((current_map_position.y < tile_to_go.y)&&(last_collider == nullptr)) {
+		if ((current_map_position.y < tile_to_go.y) && (last_collider == nullptr)) {
 			//LOG("Going down");
 			current_speed.y = speed.y;
 		}
-		if (path_to_player->Count() == 1){
+		if (path_to_player->Count() == 1) {
 			current_speed.y = speed.y;
 		}
 	}
 
-	if ((going_after_player)&&(abs(player->position.x - position.x) > detection_range))
+	if ((going_after_player) && (abs(player->position.x - position.x) > detection_range))
 	{
 		if (state == RUN_FORWARD) state = RUN_BACKWARD;
 		if (state == RUN_BACKWARD) state = RUN_FORWARD;
@@ -168,7 +179,7 @@ bool j1FlyingEnemy::Update(float dt) {
 	if (collider != nullptr)
 		collider->SetPos(position.x, position.y);
 	if ((raycast != nullptr) && (collider != nullptr))
-		raycast->SetPos(collider->rect.x + collider->rect.w * 0.5f - raycast->rect.w * 0.5f, position.y + current_animation->GetCurrentFrame().h -4);
+		raycast->SetPos(collider->rect.x + collider->rect.w * 0.5f - raycast->rect.w * 0.5f, position.y + current_animation->GetCurrentFrame().h - 4);
 
 	return ret;
 }
@@ -177,7 +188,7 @@ bool j1FlyingEnemy::Update(float dt) {
 
 bool j1FlyingEnemy::PostUpdate() {
 	BROFILER_CATEGORY("FlyingEnemyPostUpdate", Profiler::Color::Tomato)
-	bool ret = true;
+		bool ret = true;
 	App->render->Blit(texture, position.x, position.y, &current_animation->GetCurrentFrame(), flip);
 	return ret;
 }
@@ -185,38 +196,15 @@ bool j1FlyingEnemy::PostUpdate() {
 
 void j1FlyingEnemy::OnCollision(Collider* c1, Collider* c2) {
 
-	if (c1 == raycast) 
+	if (c1 == raycast)
 		last_collider = c2;
 
 	switch (c2->type)
 	{
 	case COLLIDER_WALL:
-		/*
-		if (position.y + current_animation->GetCurrentFrame().h < c2->rect.y + COLLIDER_MARGIN)
-		{
-			grounded = true;
-			position.y = c2->rect.y - current_animation->GetCurrentFrame().h;
-			current_speed.y = 0;
-			state = IDLE;
-		}
-
-		if (position.y + current_animation->GetCurrentFrame().h > c2->rect.y) {
-			position.x = lastPosition.x;
-		}
-		if (position.y > c2->rect.y + c2->rect.h - COLLIDER_MARGIN)
-		{
-			position.y = c2->rect.y + c2->rect.h;
-			current_speed.y = 0;
-		}
-		if ((position.y > c2->rect.y) && (position.x > c2->rect.x) && (position.x + current_animation->GetCurrentFrame().w < c2->rect.x + c2->rect.w) && (position.x < c2->rect.x + c2->rect.w))
-		{
-			position.y = lastPosition.y;
-			if (lastPosition.y + current_animation->GetCurrentFrame().h > c2->rect.y) {
-			//position.y = c2->rect.y - current_animation->GetCurrentFrame().h;
-			}
-		}*/
 		position = lastPosition;
 		break;
+
 	case COLLIDER_PLAYER:
 		if (!playing_fx)
 		{
@@ -228,18 +216,19 @@ void j1FlyingEnemy::OnCollision(Collider* c1, Collider* c2) {
 		{
 			App->particles->AddParticle(App->particles->dust, collider->rect.x, collider->rect.y);
 			particles_created = true;
+			player->score += score;
 		}
+
+		player->current_speed.y = player->enemy_bouncing;
+		player->can_double_jump = true;
+
 		if (player->state != DIE)
 		{
 			App->entities->DestroyEntity(this);
 		}
-		player->current_speed.y = player->enemy_bouncing;
-		player->can_double_jump = true;
 		break;
+
 	default:
 		break;
 	}
 }
-
-
-
