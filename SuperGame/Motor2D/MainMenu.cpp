@@ -91,7 +91,7 @@ void MainMenu::OnEvent(j1UI_Element* element, FocusEvent event) {
 				visible_menu = Menu::CREDITS;
 			}
 			else {
-				ShellExecuteA(NULL, "open", "https://github.com/Avilgor/DesarrolloVJ", NULL, NULL, SW_SHOWNORMAL);
+				ShellExecuteA(NULL, "open", "https://xatrilu.github.io/DesarrolloVJ/", NULL, NULL, SW_SHOWNORMAL);
 			}
 			break;
 
