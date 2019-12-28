@@ -22,10 +22,10 @@ j1Gui::~j1Gui()
 // Called before render is available
 bool j1Gui::Awake(pugi::xml_node& conf)
 {
-	LOG("Loading GUI atlas");
+	LOG("Loading GUI spritesheet");
 	bool ret = true;
 
-	atlas_file_name = conf.child("atlas").attribute("file").as_string("");
+	atlas_file_name = conf.child("image").attribute("file").as_string("");
 
 	return ret;
 }
@@ -56,15 +56,6 @@ bool j1Gui::PreUpdate()
 			if ((item->data->draggable) && (focused_element == item->data)) {
 
 				item->data->screen_pos.x += mouse_motion.x;
-
-				/*if (item->data->parent->type != UI_Type::SLIDER)
-				{
-					item->data->screen_position.y += mouse_motion.y;
-				}
-				else
-				{
-					item->data->parent->Input();
-				}*/
 				focused_element = item->data;
 			}
 		}
