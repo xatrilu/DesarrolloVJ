@@ -49,22 +49,35 @@ In order to go throught the UI of the game, you have to interact with the differ
 ## Basic Movement 
 
 A - Move left
+
 D - Move Right
+
 S - Crouch
+
 F - Slide
+
 SPACE - Jump
 
 If SPACE is pressed while jumping a double jump will be performed.
 
 ## Debug functions
+
 F1 - Start from the first level
+
 F2 - Start from the second level
+
 F3 - Start from the beggining of the current level
+
 F4 - Pause 
+
 F5 - Save
+
 F6 - Load
+
 F9 - View colliders and camera frame
+
 F10 - God Mode (in this state you can't be killed and the WASD arrows allow you to navigate/fly throught level, even throught collision)
+
 F11 - Enable/Disable FPS cap (30 fps)
 
 # MIT License
