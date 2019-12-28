@@ -9,11 +9,9 @@ Using as a base the game *The Little Explorer* from one of our classmates (https
 - An in-game menu the player to adjust the volume, resume the game or go back to main menu.
 
 # Team Members
-
-<div class="figure">
-  <source>
+<img>
 <img src="Web/Team%20photo.png" width = "290" height = "350" class ="inline">
-<p>
+<img>
   
 Project made by:
 
