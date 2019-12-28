@@ -108,7 +108,7 @@
   </particles>
  
  <gui>
-    <image file="sprites/"/>
+    <image file="sprites/UI/UISheet.png"/>
  </gui>
 
 
