@@ -7,3 +7,16 @@ Using as a base the game *The Little Explorer* from one of our classmates (https
 - An intro menu, with the buttons for the options of “Play”, “Continue”, “Settings”, “Credits” and “Exit”.
 - A game HUD that shows the amount of lives that the player has, the amount of coins that he has colected, a timer and the player score.
 - An in-game menu the player to adjust the volume, resume the game or go back to main menu.
+
+# Team Members
+
+Project made by:
+
+* Xavi Trillo
+
+[https://github.com/xatrilu](https://github.com/xatrilu)
+
+* Adrià Ávila
+
+[https://github.com/Avilgor](https://github.com/Avilgor)
+
