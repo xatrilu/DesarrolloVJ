@@ -6,6 +6,7 @@
 #include "GuiText.h"
 #include "p2SString.h"
 #include "j1Fonts.h"
+#include "p2Log.h"
 
 GuiButton::GuiButton(j1Module* g_callback) {
 	callback = g_callback;
@@ -28,7 +29,7 @@ void GuiButton::Init(iPoint g_position, SDL_Rect g_normal_rect, SDL_Rect g_hover
 	screen_pos = g_position;
 	texture = (SDL_Texture*)App->gui->GetAtlas();
 	normal_rect = g_normal_rect;
-	hover_rect = g_normal_rect;
+	hover_rect = g_hover_rect;
 	click_rect = g_click_rect;
 	action = g_action;
 	stay_clicked = g_stay_clicked;

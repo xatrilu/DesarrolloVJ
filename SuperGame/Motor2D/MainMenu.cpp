@@ -156,19 +156,19 @@ void MainMenu::CreateMainScreen() {
 	title->texture = App->tex->Load("sprites/UI/Title.png");
 
 	GuiButton* startBtn = (GuiButton*)App->gui->CreateUIElement(UI_Type::BUTTON, this, nullptr, false, true);
-	startBtn->Init({ 400, 330 }, { 3,390,804,296 }, { 206,547,200,72 }, { 206,547,200,72 }, "Start", ButtonAction::PLAY);
+	startBtn->Init({ 400, 300 }, { 21,300,167,83 }, { 21,384,167,83 }, { 21,384,167,83 }, "Start", ButtonAction::PLAY);
 
 	GuiButton* continueBtn = (GuiButton*)App->gui->CreateUIElement(UI_Type::BUTTON, this, nullptr, false, true);
-	continueBtn->Init({ 400, 440 }, { 3,390,804,296 }, { 206,622,196,71 }, { 206,622,200,72 }, "Continue", ButtonAction::CONTINUE);
+	continueBtn->Init({ 400, 450 }, { 21,300,167,83 }, { 21,384,167,83 }, { 21,384,167,83 }, "Continue", ButtonAction::CONTINUE);
 
 	GuiButton* settingsBtn = (GuiButton*)App->gui->CreateUIElement(UI_Type::BUTTON, this, nullptr, false, true);
-	settingsBtn->Init({ 400, 540 }, { 3,390,804,296 }, { 206,547,200,72 }, { 206,547,200,72 }, "Settings", ButtonAction::SETTINGS);
+	settingsBtn->Init({ 400, 600 }, { 21,300,167,83 }, { 21,384,167,83 }, { 21,384,167,83 }, "Settings", ButtonAction::SETTINGS);
 
 	GuiButton* exitBtn = (GuiButton*)App->gui->CreateUIElement(UI_Type::BUTTON, this, nullptr, false, true);
-	exitBtn->Init({ 50, 626 }, { 8,622,196,71 }, { 206,622,196,71 }, { 206,622,200,72 }, "Exit", ButtonAction::QUIT);
+	exitBtn->Init({ 50, 626 }, { 21,300,167,83 }, { 21,384,167,83 }, { 21,384,167,83 }, "Exit", ButtonAction::QUIT);
 
 	GuiButton* creditsBtn = (GuiButton*)App->gui->CreateUIElement(UI_Type::BUTTON, this, nullptr, false, true);
-	creditsBtn->Init({ 780, 626 }, { 6,547,200,72 }, { 206,547,200,72 }, { 206,547,200,72 }, "Credits", ButtonAction::CREDITS);
+	creditsBtn->Init({ 780, 626 }, { 21,300,167,83 }, { 21,384,167,83 }, { 21,384,167,83 }, "Credits", ButtonAction::CREDITS);
 
 	visible_menu = Menu::MAIN_MENU;
 }
@@ -184,7 +184,7 @@ void MainMenu::CreateSettingsScreen()
 	menuBackground->Init({ 250, 250 }, { 0,0,512,264 });
 
 	GuiButton* backBtn = (GuiButton*)App->gui->CreateUIElement(UI_Type::BUTTON, this, nullptr, false, true);
-	backBtn->Init({ 20, 20 }, { 897,618,114,94 }, { 897,618,114,94 }, { 897,618,114,94 }, "", ButtonAction::GO_BACK);
+	backBtn->Init({ 20, 20 }, { 3,470,66,80 }, { 3,470,66,80 }, { 3,470,66,80 }, "", ButtonAction::GO_BACK);
 
 	GuiButton* fullscreenBtn = (GuiButton*)App->gui->CreateUIElement(UI_Type::BUTTON, this, nullptr, false, true);
 	fullscreenBtn->Init({ 300,410 }, { 206, 697, 49,53 }, { 206, 697, 49,53 }, { 262,697,49,53 }, "", ButtonAction::CONTEXTUAL_1, true);
@@ -202,10 +202,10 @@ void MainMenu::CreateCreditsScreen() {
 	background->texture = App->tex->Load("sprites/UI/MenuBackground.jpg");
 
 	GuiImage* panel = (GuiImage*)App->gui->CreateUIElement(UI_Type::IMAGE, this);
-	panel->Init({ 140,160 }, { 0,1062,726,522 });
+	panel->Init({ 200,280 }, { 17,581,605,394 });
 
-	GuiButton* go_back_button = (GuiButton*)App->gui->CreateUIElement(UI_Type::BUTTON, this, nullptr, false, true);
-	go_back_button->Init({ 20, 20 }, { 897,618,114,94 }, { 897,618,114,94 }, { 897,618,114,94 }, "", ButtonAction::GO_BACK);
+	GuiButton* backBtn = (GuiButton*)App->gui->CreateUIElement(UI_Type::BUTTON, this, nullptr, false, true);
+	backBtn->Init({ 20, 20 }, { 3,470,66,80 }, { 3,470,66,80 }, { 3,470,66,80 }, "", ButtonAction::GO_BACK);
 
 	GuiImage* title = (GuiImage*)App->gui->CreateUIElement(UI_Type::IMAGE, this);
 	title->Init({ 100, 80 }, { 0,0,800, 150 });
@@ -218,16 +218,16 @@ void MainMenu::CreateCreditsScreen() {
 	studio->Init({ 380,250 }, " ");*/
 
 	GuiButton* webpage = (GuiButton*)App->gui->CreateUIElement(UI_Type::BUTTON, this, nullptr, false, true);
-	webpage->Init({ 420,520 }, { 1036,618,137,140 }, { 1038,619,138,140 }, { 1038,619,138,140 }, "", ButtonAction::CREDITS);
+	webpage->Init({ 420,520 }, { 21,300,167,83 }, { 21,384,167,83 }, { 21,384,167,83 }, "Web", ButtonAction::CREDITS);
 
 	GuiButton* adria = (GuiButton*)App->gui->CreateUIElement(UI_Type::BUTTON, this, nullptr, false, true);
-	adria->Init({ 180,390 }, { 6,547,200,72 }, { 206,547,200,72 }, { 206,547,200,72 }, "Adrià Avila", ButtonAction::CONTEXTUAL_1);
+	adria->Init({ 270,390 }, { 21,300,167,83 }, { 21,384,167,83 }, { 21,384,167,83 }, "Adrià Avila", ButtonAction::CONTEXTUAL_1);
 
 	GuiButton* xavier = (GuiButton*)App->gui->CreateUIElement(UI_Type::BUTTON, this, nullptr, false, true);
-	xavier->Init({ 625,390 }, { 6,547,200,72 }, { 206,547,200,72 }, { 206,547,200,72 }, "Xavier Trillo", ButtonAction::CONTEXTUAL_2);
+	xavier->Init({ 570,390 }, { 21,300,167,83 }, { 21,384,167,83 }, { 21,384,167,83 }, "Xavier Trillo", ButtonAction::CONTEXTUAL_2);
 
-	GuiButton* license = (GuiButton*)App->gui->CreateUIElement(UI_Type::BUTTON, this, nullptr, false, true);
-	license->Init({ 780,25 }, { 8,622,196,71 }, { 206,622,196,71 }, { 206,622,200,72 }, "License", ButtonAction::CONTEXTUAL_3);
+	/*GuiButton* license = (GuiButton*)App->gui->CreateUIElement(UI_Type::BUTTON, this, nullptr, false, true);
+	license->Init({ 780,25 }, { 21,300,167,83 }, { 21,384,167,83 }, { 21,384,167,83 }, "License", ButtonAction::CONTEXTUAL_3);*/
 
 	visible_menu = Menu::CREDITS;
 }
