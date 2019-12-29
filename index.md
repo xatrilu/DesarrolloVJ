@@ -5,8 +5,8 @@ We are a group of students in the 2nd year of our Videogame Design and Videogame
 Using as a base the game *The Little Explorer* from one of our classmates (https://github.com/Windfog-Studios/The-Little-Explorer), we have added the following UI elements in order to make the game more enjoyable an easy to play:
 
 - An intro menu, with the buttons for the options of “Play”, “Continue”, “Settings”, “Credits” and “Exit”.
-- A game HUD that shows the amount of lives that the player has, the amount of coins that he has colected, a timer and the player score.
-- An in-game menu the player to adjust the volume, resume the game or go back to main menu.
+- A game HUD that shows the amount of lives that the player has, and the player score.
+- An in-game menu in which the player can either resume the game or go back to main menu.
 
 # Team Members
 <img>
@@ -38,7 +38,10 @@ if you want to check the code repository, you can do so by clicking this link in
 
 You can watch a little bit of video gameplay here!
 
-
+  <video width="1024" height="780" controls>
+  <source src="Web/Gameplay%20Video.mp4" type="video/mp4">
+  <controls>
+ </video>
 
 # How to play
 
