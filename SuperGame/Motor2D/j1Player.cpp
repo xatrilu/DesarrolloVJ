@@ -33,7 +33,7 @@ j1Player::j1Player() :j1Entity(EntityType::PLAYER) {
 
 	particles_created = false;
 	controls_blocked = false;
-	isVisible = true;
+	visible = true;
 	god = false;
 
 	can_double_jump = true;
@@ -63,7 +63,7 @@ j1Player::j1Player() :j1Entity(EntityType::PLAYER) {
 		collider = App->collision->AddCollider(SDL_Rect{ initialPosition.x, initialPosition.y,32,64 }, COLLIDER_PLAYER, (j1Module*)this);
 		raycast = App->collision->AddCollider(SDL_Rect{ initialPosition.x, initialPosition.y,20,5 }, COLLIDER_PLAYER_ATTACK, (j1Module*)this);
 
-		isVisible = true;
+		visible = true;
 		grounded = false;
 
 		current_speed = { 0,0 };
@@ -429,7 +429,7 @@ bool j1Player::Update(float dt) {
 
 bool j1Player::PostUpdate() {
 	BROFILER_CATEGORY("PlayerPreUpdate", Profiler::Color::CadetBlue)
-		if (isVisible)
+		if (visible)
 		{
 			App->render->Blit(texture, position.x, position.y, &current_animation->GetCurrentFrame(), flip);
 		}
@@ -545,8 +545,8 @@ void j1Player::OnCollision(Collider* c1, Collider* c2) {
 			break;
 		case TRIGGER:
 			if (c2->level_change) {
-				if (App->scene->current_level == LEVEL_1) App->fadeBlack->FadeToBlack(LEVEL_1, LEVEL_2);
-				if (App->scene->current_level == LEVEL_2) App->fadeBlack->FadeToBlack(LEVEL_2, LEVEL_1);
+				if (App->scene->currentLevel == LEVEL_1) App->fadeBlack->FadeToBlack(LEVEL_1, LEVEL_2);
+				if (App->scene->currentLevel == LEVEL_2) App->fadeBlack->FadeToBlack(LEVEL_2, LEVEL_1);
 				App->entities->blocked_movement = true;
 			}
 
@@ -568,11 +568,11 @@ void j1Player::OnCollision(Collider* c1, Collider* c2) {
 				App->particles->AddParticle(App->particles->dust, position.x, position.y + 20, COLLIDER_NONE, 0, flip);
 				App->particles->AddParticle(App->particles->dust, position.x - 10, position.y + current_animation->GetCurrentFrame().h - 22, COLLIDER_NONE, 0, flip);
 				App->particles->AddParticle(App->particles->dust, position.x + 2, position.y + current_animation->GetCurrentFrame().h - 2, COLLIDER_NONE, 0, flip);
-				isVisible = false;
+				visible = false;
 				App->audio->PlayFx(die_fx);
 				state = IDLE;
 				current_speed.x = current_speed.y = 0;
-				App->fadeBlack->FadeToBlack(App->scene->current_level, App->scene->current_level);
+				App->fadeBlack->FadeToBlack(App->scene->currentLevel, App->scene->currentLevel);
 				particles_created = true;
 				position = initialPosition;
 				lives--;
@@ -587,11 +587,11 @@ void j1Player::OnCollision(Collider* c1, Collider* c2) {
 					App->particles->AddParticle(App->particles->dust, position.x, position.y + 20, COLLIDER_NONE, 0, flip);
 					App->particles->AddParticle(App->particles->dust, position.x - 10, position.y + current_animation->GetCurrentFrame().h - 22, COLLIDER_NONE, 0, flip);
 					App->particles->AddParticle(App->particles->dust, position.x + 2, position.y + current_animation->GetCurrentFrame().h - 2, COLLIDER_NONE, 0, flip);
-					isVisible = false;
+					visible = false;
 					App->audio->PlayFx(die_fx);
 					state = IDLE;
 					current_speed.x = current_speed.y = 0;
-					App->fadeBlack->FadeToBlack(App->scene->current_level, App->scene->current_level);
+					App->fadeBlack->FadeToBlack(App->scene->currentLevel, App->scene->currentLevel);
 					particles_created = true;
 					position = initialPosition;
 					lives--;
@@ -605,7 +605,7 @@ void j1Player::OnCollision(Collider* c1, Collider* c2) {
 	}
 }
 
-void j1Player::OnCommand(p2SString command) {
+void j1Player::Commands(p2SString command) {
 
 	if (command == "god_mode")
 	{

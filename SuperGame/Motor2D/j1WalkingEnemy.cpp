@@ -47,7 +47,7 @@ j1WalkingEnemy::j1WalkingEnemy() :j1Entity(EntityType::WALKING_ENEMY) {
 
 		current_speed = { 0,0 };
 
-		score = 10;
+		score = 20;
 	}
 
 	initialPosition = position;

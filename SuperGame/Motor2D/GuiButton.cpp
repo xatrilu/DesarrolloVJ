@@ -9,17 +9,19 @@
 #include "p2Log.h"
 #include "j1Audio.h"
 
-GuiButton::GuiButton(j1Module* g_callback) {
-	callback = g_callback;
+GuiButton::GuiButton(j1Module* callback) 
+{
+	callback = callback;
 	text = new GuiText();
-	click_rect = { 0,0,0,0 };
+	clickRect = { 0,0,0,0 };
 	texture = nullptr;
-	current_rect = &normal_rect;
-	stay_clicked = false;
+	currentRect = &normalRect;
+	cliking = false;
 	to_delete = false;
 }
 
-GuiButton::~GuiButton() {
+GuiButton::~GuiButton() 
+{
 	delete text;
 	delete texture;
 	parent = nullptr;
@@ -27,34 +29,36 @@ GuiButton::~GuiButton() {
 	callback = nullptr;
 }
 
-void GuiButton::Init(iPoint g_position, SDL_Rect g_normal_rect, SDL_Rect g_hover_rect, SDL_Rect g_click_rect, p2SString g_text, ButtonAction g_action, bool g_stay_clicked) {
-	screen_pos = g_position;
+void GuiButton::Init(iPoint pos, SDL_Rect normal, SDL_Rect hover, SDL_Rect click, p2SString txt, ButtonAction action, bool stay) 
+{
+	screenPos = pos;
 	texture = (SDL_Texture*)App->gui->GetAtlas();
-	normal_rect = g_normal_rect;
-	hover_rect = g_hover_rect;
-	click_rect = g_click_rect;
-	action = g_action;
-	stay_clicked = g_stay_clicked;
+	normalRect = normal;
+	hoverRect = hover;
+	clickRect = click;
+	action = action;
+	cliking = stay;
 
 	if (parent != nullptr)
 	{
-		local_pos.x = screen_pos.x - parent->screen_pos.x;
-		local_pos.y = screen_pos.y - parent->screen_pos.y;
+		localPos.x = screenPos.x - parent->screenPos.x;
+		localPos.y = screenPos.y - parent->screenPos.y;
 	}
 
-	rect = normal_rect;
+	rect = normalRect;
 
 	SDL_Rect text_rect;
 
-	App->font->CalcSize(g_text.GetString(), text_rect.w, text_rect.h);
-	text_rect.x = screen_pos.x + rect.w * 0.5f - text_rect.w * 0.5f;
-	text_rect.y = screen_pos.y + rect.h * 0.5f - text_rect.h * 0.5f;
+	App->font->CalcSize(txt.GetString(), text_rect.w, text_rect.h);
+	text_rect.x = screenPos.x + rect.w * 0.5f - text_rect.w * 0.5f;
+	text_rect.y = screenPos.y + rect.h * 0.5f - text_rect.h * 0.5f;
 
 	text->parent = this;
-	text->Init({ text_rect.x, text_rect.y }, g_text);
+	text->Init({ text_rect.x, text_rect.y }, txt);
 }
 
-bool GuiButton::CleanUp() {
+bool GuiButton::CleanUp()
+{
 	bool ret = true;
 	text->CleanUp();
 	delete text;
@@ -65,67 +69,49 @@ bool GuiButton::CleanUp() {
 	return ret;
 }
 
-bool GuiButton::Input() {
-
-	if (stay_clicked) {
-		if (current_rect == &click_rect)
-		{
-			current_rect = &normal_rect;
-		}
-		else
-		{
-			current_rect = &click_rect;
-		}
-	}
-	else
+bool GuiButton::Input()
+{
+	if (cliking) 
 	{
-		current_rect = &click_rect;
+		if (currentRect == &clickRect) currentRect = &normalRect;
+		else currentRect = &clickRect;
 	}
-	if (callback != NULL) {
-		callback->OnEvent(this, FocusEvent::CLICKED);
-	}
+	else currentRect = &clickRect;
+	if (callback != NULL) callback->OnEvent(this, FocusEvent::CLICKED);
 	return true;
 }
 
-bool GuiButton::Update(float dt) {
+bool GuiButton::Update(float dt) 
+{
 	bool ret = true;
-	if (!stay_clicked) {
+	if (!cliking) 
+	{
 		if (OnHover())
 		{			
-			if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
-			{
-				current_rect = &click_rect;
-			}
-			current_rect = &hover_rect;
+			if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN) currentRect = &clickRect;			
+			currentRect = &hoverRect;
 		}
-		else
-		{
-			current_rect = &normal_rect;
-		}
+		else currentRect = &normalRect;		
 	}
 
 	if (parent != nullptr)
 	{
-		screen_pos.x = parent->screen_pos.x + local_pos.x;
-		screen_pos.y = parent->screen_pos.y + local_pos.y;
+		screenPos.x = parent->screenPos.x + localPos.x;
+		screenPos.y = parent->screenPos.y + localPos.y;
 	}
 
-	rect.x = screen_pos.x - App->render->camera.x;
-	rect.y = screen_pos.y - App->render->camera.y;
+	rect.x = screenPos.x - App->render->camera.x;
+	rect.y = screenPos.y - App->render->camera.y;
 
-	if (text->text.Length() > 0)
-	{
-		text->Update(dt);
-	}
+	if (text->text.Length() > 0) text->Update(dt);
 
 	return true;
 }
 
-bool GuiButton::Draw() {
-
-	App->render->Blit(texture, rect.x, rect.y, current_rect);
+bool GuiButton::Draw() 
+{
+	App->render->Blit(texture, rect.x, rect.y, currentRect);
 	if (text->text.Length() > 0) { text->Draw(); }
-
 	return true;
 }
 

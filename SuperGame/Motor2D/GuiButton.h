@@ -12,11 +12,11 @@ enum class ButtonAction {
 	SETTINGS,
 	CREDITS,
 	QUIT,
-	GO_BACK,
+	BACK,
 	RESTART,
-	CONTEXTUAL_1,
-	CONTEXTUAL_2,
-	CONTEXTUAL_3,
+	ADRIA,
+	XAVIER,
+	FULLSCREEN,
 	NONE
 };
 
@@ -26,22 +26,22 @@ public:
 	GuiButton(j1Module* callback);
 	~GuiButton();
 
-	void Init(iPoint position, SDL_Rect normal_rect, SDL_Rect hover_rect, SDL_Rect click_rect, p2SString text, ButtonAction action = ButtonAction::NONE, bool stay_clicked = false);
+	void Init(iPoint position, SDL_Rect normalRect, SDL_Rect hoverRect, SDL_Rect clickRect, p2SString text, ButtonAction action = ButtonAction::NONE, bool cliking = false);
 	bool Update(float dt);
 	bool CleanUp();
 	bool Input();
 	bool Draw();
 
 private:
-	SDL_Texture* texture;
-	SDL_Rect* current_rect;
-	SDL_Rect		normal_rect;
-	SDL_Rect		hover_rect;
-	SDL_Rect		click_rect;
-	GuiText* text;
+	SDL_Texture*	texture;
+	SDL_Rect*		currentRect;
+	SDL_Rect		normalRect;
+	SDL_Rect		hoverRect;
+	SDL_Rect		clickRect;
+	GuiText*		text;
 public:
 	ButtonAction	action;
-	bool stay_clicked;
+	bool cliking;
 };
 
 #endif // !_GUIBUTTON_H_

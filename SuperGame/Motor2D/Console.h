@@ -8,7 +8,7 @@ class GuiInputText;
 struct SDL_Rect;
 class ConsoleCommands;
 
-#define MAX_LOG_RECORD 100
+#define MAX_LOG_RECORD 150
 
 class Console : public j1Module
 {
@@ -22,29 +22,28 @@ public:
 	bool Update(float dt);
 	bool PostUpdate();
 	bool CleanUp();
-	void OnCommand(p2SString command);
-
+	void Commands(p2SString command);
 	void AddLogText(p2SString new_text);
-
+	void CreateCommand(const char* command, j1Module* callback, const char* info = "No explanation given");
+	void CheckCommand(p2SString command);
 	void CreateInterface();
 	void DestroyInterface();
 
-	void CreateCommand(const char* command, j1Module* callback, const char* explanation = "No explanation given");
-	void CheckCommand(p2SString command);
 
 public:
 	GuiInputText* command_input;
+
 	p2List<p2SString> log_record;
-	p2List<GuiText*> on_screen_log;
+	p2List<GuiText*> screenLOG;
 	p2List<p2SString> input_commands;
 	p2List<ConsoleCommands*> commands;
-	p2List_item<p2SString>* current_consulting_command;
-	int l;
-	bool isVisible;
-	SDL_Rect log_box;
+	p2List_item<p2SString>* currentCommand;
+
+	SDL_Rect LOGBox;
 	SDL_Rect command_background;
+	bool visible;
 	bool CleanUpStarted;
 };
 
-#endif // !_j1CONSOLE_H_
+#endif 
 

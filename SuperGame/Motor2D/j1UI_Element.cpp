@@ -3,10 +3,7 @@
 #include "j1Input.h"
 #include "j1Render.h"
 
-void j1UI_Element::SetLocalPos(iPoint pos)
-{
-	local_pos = pos;
-}
+void j1UI_Element::SetLocalPos(iPoint pos) { localPos = pos; }
 
 bool j1UI_Element::OnHover()
 {
@@ -16,13 +13,11 @@ bool j1UI_Element::OnHover()
 	camera.y = App->render->camera.y;
 
 	bool ret = false;
-
 	App->input->GetMousePosition(mouse.x, mouse.y);
 	mouse.x -= camera.x;
 	mouse.y -= camera.y;
 
-	if ((mouse.x > rect.x) && (mouse.x < rect.x + rect.w) && (mouse.y > rect.y) && (mouse.y < rect.y + rect.h)) //Check mouse positions
-		ret = true;
+	if ((mouse.x > rect.x) && (mouse.x < rect.x + rect.w) && (mouse.y > rect.y) && (mouse.y < rect.y + rect.h)) ret = true;
 
 	return ret;
 }

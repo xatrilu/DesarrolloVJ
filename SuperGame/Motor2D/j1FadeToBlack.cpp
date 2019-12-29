@@ -62,13 +62,13 @@ bool j1FadeToBlack::PostUpdate()
 			App->particles->AddParticle(App->particles->dust, App->entities->player_pointer->position.x - 10, App->entities->player_pointer->position.y + App->entities->player_pointer->current_animation->GetCurrentFrame().h - 22, COLLIDER_NONE, 0, App->entities->player_pointer->flip);
 			App->particles->AddParticle(App->particles->dust, App->entities->player_pointer->position.x + 2, App->entities->player_pointer->position.y + App->entities->player_pointer->current_animation->GetCurrentFrame().h - 2, COLLIDER_NONE, 0, App->entities->player_pointer->flip);
 			App->entities->player_pointer->particles_created = true;
-			App->entities->player_pointer->isVisible = true;
+			App->entities->player_pointer->visible = true;
 		}
 		if (now >= total_time) {
 			current_step = fade_step::none;
 			//App->entities->player->grounded = false;
 			App->entities->player_pointer->particles_created = false;
-			App->entities->player_pointer->isVisible = true;
+			App->entities->player_pointer->visible = true;
 			App->entities->blocked_movement = false;
 
 			if (App->entities->player_pointer->last_checkpoint != nullptr)

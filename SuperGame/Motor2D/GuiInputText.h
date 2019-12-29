@@ -25,13 +25,13 @@ public:
 
 private:
 	GuiImage* background;
-	p2SString default_text;
+	p2SString defaultText;
 	GuiText* text;
-	SDL_Rect cursor;
+	SDL_Rect mouse;
 	bool focused;
 	bool usingAtlas;
 public:
-	int cursor_position;
+	int mousePos;
 };
 
 

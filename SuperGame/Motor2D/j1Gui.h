@@ -15,7 +15,7 @@ class j1StaticText;
 class j1Image;
 class j1Slider;
 
-#define CURSOR_WIDTH 2
+#define MOUSE_WIDTH 2
 
 // ---------------------------------------------------
 class j1Gui : public j1Module
@@ -54,7 +54,7 @@ private:
 	bool focused = false;
 
 public:
-	p2List<j1UI_Element*> ui_elements;
+	p2List<j1UI_Element*> UIelements;
 	j1UI_Element* focused_element = nullptr;
 	bool debug = false;
 	uint	clickFX;

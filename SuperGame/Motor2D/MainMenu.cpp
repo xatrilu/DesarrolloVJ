@@ -36,10 +36,10 @@ bool MainMenu::Start()
 
 	App->gui->Start();
 
-	window_width = App->win->width;
-	window_width = App->win->height;
+	winWidth = App->win->width;
+	winWidth = App->win->height;
 
-	App->audio->PlayMusic("path_to_follow.ogg");
+	App->audio->PlayMusic("MenuMusic.ogg");
 	BackgroundTex = App->tex->Load("sprites/UI/MenuBackground.jpg");
 	TitleTex = App->tex->Load("sprites/UI/Title.png");
 
@@ -71,11 +71,11 @@ void MainMenu::OnEvent(j1UI_Element* element, FocusEvent event)
 				RELEASE_ARRAY(data);
 			}
 
-			App->render->camera.x = App->scene->initial_camera_position.x;
-			App->render->camera.y = App->scene->initial_camera_position.y;
+			App->render->camera.x = App->scene->startCameraPos.x;
+			App->render->camera.y = App->scene->startCameraPos.y;
 
 			App->gui->DestroyAllGui();
-			if (App->console->isVisible) App->console->DestroyInterface();
+			if (App->console->visible) App->console->DestroyInterface();
 			App->scene->CreateScreenUI();
 			break;
 
@@ -83,38 +83,42 @@ void MainMenu::OnEvent(j1UI_Element* element, FocusEvent event)
 			App->gui->DestroyAllGui();
 			App->LoadGame();
 			App->scene->LevelChange(NO_MAP, LEVEL_1);
-			App->scene->visible_menu = Menu::NO_MENU;
+			App->scene->openMenu = Menu::NO_MENU;
 			App->entities->blocked_movement = false;
 			App->scene->CreateScreenUI();
 			break;
 
 		case ButtonAction::SETTINGS:
 			App->gui->DestroyAllGui();
-
 			CreateSettingsScreen();
 			break;
 
 		case ButtonAction::CREDITS:
-			if (visible_menu == Menu::MAIN_MENU) {
+			if (openMenu == Menu::MAIN_MENU) {
 				App->gui->DestroyAllGui();
 				CreateCreditsScreen();
-				visible_menu = Menu::CREDITS;
+				openMenu = Menu::CREDITS;
 			}
-			else {
-				ShellExecuteA(NULL, "open", "https://xatrilu.github.io/DesarrolloVJ/", NULL, NULL, SW_SHOWNORMAL);
-			}
+			else ShellExecuteA(NULL, "open", "https://xatrilu.github.io/DesarrolloVJ/", NULL, NULL, SW_SHOWNORMAL);
 			break;
 
-		case ButtonAction::GO_BACK:
+		case ButtonAction::BACK:
 			App->gui->DestroyAllGui();
 			CreateMainScreen();
 			break;
 
-		case ButtonAction::CONTEXTUAL_1:
-			if (visible_menu == Menu::CREDITS) {
-				ShellExecuteA(NULL, "open", "https://github.com/Avilgor", NULL, NULL, SW_SHOWNORMAL);
-			}
-			else if (visible_menu == Menu::SETTINGS) {
+		case ButtonAction::ADRIA:
+			if (openMenu == Menu::CREDITS) ShellExecuteA(NULL, "open", "https://github.com/Avilgor", NULL, NULL, SW_SHOWNORMAL);
+				
+			break;
+
+		case ButtonAction::XAVIER:
+			if (openMenu == Menu::CREDITS) ShellExecuteA(NULL, "open", "https://github.com/xatrilu", NULL, NULL, SW_SHOWNORMAL);
+
+			break;
+		case ButtonAction::FULLSCREEN:
+			if (openMenu == Menu::SETTINGS) 
+			{
 				if (!fullscreen)
 				{
 					SDL_SetWindowFullscreen(App->win->window, SDL_WINDOW_FULLSCREEN);
@@ -125,28 +129,12 @@ void MainMenu::OnEvent(j1UI_Element* element, FocusEvent event)
 					SDL_SetWindowFullscreen(App->win->window, SDL_WINDOW_RESIZABLE);
 					fullscreen = false;
 				}
-				window_width = App->win->width;
-				window_width = App->win->height;
+				winWidth = App->win->width;
+				winWidth = App->win->height;
 			}
 			break;
-
-		case ButtonAction::CONTEXTUAL_2:
-			if (visible_menu == Menu::CREDITS) {
-				ShellExecuteA(NULL, "open", "https://github.com/xatrilu", NULL, NULL, SW_SHOWNORMAL);
-			}
-			break;
-
-		case ButtonAction::CONTEXTUAL_3:
-			if (visible_menu == Menu::CREDITS) {
-				ShellExecuteA(NULL, "open", "", NULL, NULL, SW_SHOWNORMAL);
-			}
-			break;
-
 		case ButtonAction::QUIT:
 			App->quit = true;
-			break;
-
-		default:
 			break;
 		}
 	}
@@ -154,16 +142,17 @@ void MainMenu::OnEvent(j1UI_Element* element, FocusEvent event)
 
 void MainMenu::CreateMainScreen() 
 {
+	openMenu = Menu::MAIN_MENU;
 	SDL_Rect camera;
 	camera = App->render->camera;
 
 	GuiImage* background = (GuiImage*)App->gui->CreateUIElement(UI_Type::IMAGE, this);
 	background->Init({ 0,0 }, { 0,0,(int)App->win->width, (int)App->win->height });
-	background->texture = App->tex->Load("sprites/UI/MenuBackground.jpg");
+	background->texture = BackgroundTex;
 
 	GuiImage* title = (GuiImage*)App->gui->CreateUIElement(UI_Type::IMAGE, this);
 	title->Init({ 100,100 }, { 0,0,800, 150 });
-	title->texture = App->tex->Load("sprites/UI/Title.png");
+	title->texture = TitleTex;
 
 	GuiButton* startBtn = (GuiButton*)App->gui->CreateUIElement(UI_Type::BUTTON, this, nullptr, false, true);
 	startBtn->Init({ 400, 300 }, { 21,300,167,83 }, { 21,384,167,83 }, { 21,384,167,83 }, "Start", ButtonAction::PLAY);
@@ -179,58 +168,55 @@ void MainMenu::CreateMainScreen()
 
 	GuiButton* creditsBtn = (GuiButton*)App->gui->CreateUIElement(UI_Type::BUTTON, this, nullptr, false, true);
 	creditsBtn->Init({ 780, 626 }, { 21,300,167,83 }, { 21,384,167,83 }, { 21,384,167,83 }, "Credits", ButtonAction::CREDITS);
-
-	visible_menu = Menu::MAIN_MENU;
 }
 
 void MainMenu::CreateSettingsScreen() 
 {
+	openMenu = Menu::SETTINGS;
 	GuiImage* background = (GuiImage*)App->gui->CreateUIElement(UI_Type::IMAGE, this);
 	background->Init({ 0,0 }, { 0,0,(int)App->win->width,(int)App->win->height });
-	background->texture = App->tex->Load("sprites/UI/MenuBackground.jpg");
+	background->texture = BackgroundTex;
+
+	GuiImage* title = (GuiImage*)App->gui->CreateUIElement(UI_Type::IMAGE, this);
+	title->Init({ 100, 80 }, { 0,0,800, 150 });
+	title->texture = TitleTex;
 
 	GuiImage* menuBackground = (GuiImage*)App->gui->CreateUIElement(UI_Type::IMAGE, this);
-	menuBackground->Init({ 250, 250 }, { 0,0,512,264 });
+	menuBackground->Init({ 300, 415 }, { 192,327,517,76 });
 
 	GuiButton* backBtn = (GuiButton*)App->gui->CreateUIElement(UI_Type::BUTTON, this, nullptr, false, true);
-	backBtn->Init({ 20, 20 }, { 3,470,66,80 }, { 3,470,66,80 }, { 3,470,66,80 }, "", ButtonAction::GO_BACK);
+	backBtn->Init({ 20, 20 }, { 3,470,66,80 }, { 3,470,66,80 }, { 3,470,66,80 }, "", ButtonAction::BACK);
 
 	GuiButton* fullscreenBtn = (GuiButton*)App->gui->CreateUIElement(UI_Type::BUTTON, this, nullptr, false, true);
-	fullscreenBtn->Init({ 300,410 }, { 206, 697, 49,53 }, { 206, 697, 49,53 }, { 262,697,49,53 }, "", ButtonAction::CONTEXTUAL_1, true);
+	fullscreenBtn->Init({ 300,400 }, { 133, 470, 110,101 }, { 475, 477, 110,101 }, { 475,477,110,101 }, "", ButtonAction::FULLSCREEN, true);
 
 	GuiText* fullscreenTxt = (GuiText*)App->gui->CreateUIElement(UI_Type::TEXT, this, nullptr, false, true);
-	fullscreenTxt->Init({ 380,406 }, "Fullscreen");
-
-	visible_menu = Menu::SETTINGS;
+	fullscreenTxt->Init({ 500,430 }, "Fullscreen");	
 }
 
 void MainMenu::CreateCreditsScreen()
 {
+	openMenu = Menu::CREDITS;
 	GuiImage* background = (GuiImage*)App->gui->CreateUIElement(UI_Type::IMAGE, this);
 	background->Init({ 0,0 }, { 0,0,(int)App->win->width,(int)App->win->height });
-	background->texture = App->tex->Load("sprites/UI/MenuBackground.jpg");
+	background->texture = BackgroundTex;
 
 	GuiImage* panel = (GuiImage*)App->gui->CreateUIElement(UI_Type::IMAGE, this);
 	panel->Init({ 200,280 }, { 17,581,605,394 });
 
 	GuiButton* backBtn = (GuiButton*)App->gui->CreateUIElement(UI_Type::BUTTON, this, nullptr, false, true);
-	backBtn->Init({ 20, 20 }, { 3,470,66,80 }, { 3,470,66,80 }, { 3,470,66,80 }, "", ButtonAction::GO_BACK);
+	backBtn->Init({ 20, 20 }, { 3,470,66,80 }, { 3,470,66,80 }, { 3,470,66,80 }, "", ButtonAction::BACK);
 
 	GuiImage* title = (GuiImage*)App->gui->CreateUIElement(UI_Type::IMAGE, this);
 	title->Init({ 100, 80 }, { 0,0,800, 150 });
-	title->texture = App->tex->Load("sprites/UI/Title.png");
+	title->texture = TitleTex;
 
 	GuiButton* webpage = (GuiButton*)App->gui->CreateUIElement(UI_Type::BUTTON, this, nullptr, false, true);
 	webpage->Init({ 420,520 }, { 21,300,167,83 }, { 21,384,167,83 }, { 21,384,167,83 }, "Web", ButtonAction::CREDITS);
 
 	GuiButton* adria = (GuiButton*)App->gui->CreateUIElement(UI_Type::BUTTON, this, nullptr, false, true);
-	adria->Init({ 270,390 }, { 21,300,167,83 }, { 21,384,167,83 }, { 21,384,167,83 }, "Adrià Avila", ButtonAction::CONTEXTUAL_1);
+	adria->Init({ 270,390 }, { 21,300,167,83 }, { 21,384,167,83 }, { 21,384,167,83 }, "Adrià Avila", ButtonAction::ADRIA);
 
 	GuiButton* xavier = (GuiButton*)App->gui->CreateUIElement(UI_Type::BUTTON, this, nullptr, false, true);
-	xavier->Init({ 570,390 }, { 21,300,167,83 }, { 21,384,167,83 }, { 21,384,167,83 }, "Xavier Trillo", ButtonAction::CONTEXTUAL_2);
-
-	/*GuiButton* license = (GuiButton*)App->gui->CreateUIElement(UI_Type::BUTTON, this, nullptr, false, true);
-	license->Init({ 780,25 }, { 21,300,167,83 }, { 21,384,167,83 }, { 21,384,167,83 }, "License", ButtonAction::CONTEXTUAL_3);*/
-
-	visible_menu = Menu::CREDITS;
+	xavier->Init({ 570,390 }, { 21,300,167,83 }, { 21,384,167,83 }, { 21,384,167,83 }, "Xavier Trillo", ButtonAction::XAVIER);
 }

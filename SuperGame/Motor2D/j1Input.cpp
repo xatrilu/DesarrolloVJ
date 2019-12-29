@@ -124,7 +124,7 @@ bool j1Input::PreUpdate()
 
 		case SDL_TEXTINPUT:
 			strcat_s(text, MAX_INPUT_CHARACTERS * 4, event.text.text);
-			App->console->command_input->cursor_position++;
+			App->console->command_input->mousePos++;
 			App->console->command_input->UpdateText();
 			break;
 			/*

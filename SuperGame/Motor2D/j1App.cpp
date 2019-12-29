@@ -465,7 +465,7 @@ bool j1App::SavegameNow() const {
 	return ret;
 }
 
-void j1App::OnCommand(p2SString command) {
+void j1App::Commands(p2SString command) {
 
 	if (command == "quit")
 	{

@@ -70,15 +70,14 @@ void j1Map::Draw()
 					SDL_Rect r = tileset->GetTileRect(tile_id);
 					iPoint pos = MapToWorld(x, y);
 					//camera cooling
-					if ((pos.x < -App->render->camera.x + App->render->camera.w + 32) && (pos.x > -App->render->camera.x - 32)) {
-
+					if ((pos.x < -App->render->camera.x + (App->render->camera.w * 1.5f)) && (pos.x > -App->render->camera.x - 32)) 
+					{
 						if (layer->properties.Get("speed", 0) == 1) {
 							tileset->parallax = tileset->texture;
 							App->render->Blit(tileset->parallax, pos.x, pos.y, &r, SDL_FLIP_NONE, layer->ParallaxSpeed2);
 							App->render->Blit(tileset->parallax, pos.x + 6000, pos.y, &r, SDL_FLIP_NONE, layer->ParallaxSpeed2);
 							tileset->texture = tileset->parallax;
 						}
-
 						else
 						{
 							App->render->Blit(tileset->texture, pos.x, pos.y, &r, SDL_FLIP_NONE);
@@ -198,14 +197,14 @@ bool j1Map::Load(const char* file_name)
 	// Level data ---------------------
 
 	if (file_name == "Level1.tmx") {
-		App->scene->current_level = LEVEL_1;
+		App->scene->currentLevel = LEVEL_1;
 		App->audio->PlayMusic(level_1_music.GetString());
-		App->scene->initial_camera_position = level_1_initial_camera_position;
+		App->scene->startCameraPos = level_1_initial_camera_position;
 	}
 	if (file_name == "Level2.tmx") {
-		App->scene->current_level = LEVEL_2;
+		App->scene->currentLevel = LEVEL_2;
 		App->audio->PlayMusic(level_2_music.GetString());
-		App->scene->initial_camera_position = level_2_initial_camera_position;
+		App->scene->startCameraPos = level_2_initial_camera_position;
 	}
 
 	// Load general info ----------------------------------------------

@@ -41,7 +41,7 @@ j1FlyingEnemy::j1FlyingEnemy() :j1Entity(EntityType::FLYING_ENEMY) {
 		collider = App->collision->AddCollider({ 2000,200,45,26 }, COLLIDER_ENEMY, (j1Module*)this);
 		raycast = App->collision->AddCollider({ 2000,200,20,2 }, COLLIDER_ENEMY, (j1Module*)this);
 
-		score = 15;
+		score = 30;
 	}
 
 	initialPosition = position;

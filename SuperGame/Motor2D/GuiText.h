@@ -17,7 +17,7 @@ public:
 	void UpdateText();
 
 public:
-	p2SString		text;
+	p2SString text;
 	const char* font;
 	SDL_Texture* texture = nullptr;
 };

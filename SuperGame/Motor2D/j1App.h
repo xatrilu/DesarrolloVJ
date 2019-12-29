@@ -57,7 +57,7 @@ public:
 	void LoadGame();
 	void SaveGame() const;
 	void GetSaveGames(p2List<p2SString>& list_to_fill) const;
-	void OnCommand(p2SString command);
+	void Commands(p2SString command);
 
 private:
 

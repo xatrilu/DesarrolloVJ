@@ -12,7 +12,7 @@ class j1Player;
 class j1WalkingEnemy;
 class j1WalkingEnemy2;
 class j1FlyingEnemy;
-class j1Collectible;
+class jPickUpObject;
 
 enum class EntityType
 {
@@ -65,7 +65,7 @@ public:
 	j1Player* reference_player;
 	j1WalkingEnemy* reference_walking_enemy;
 	j1FlyingEnemy* reference_flying_enemy;
-	j1Collectible* reference_collectible;
+	jPickUpObject* reference_collectible;
 
 	//sfx
 	uint walking_enemy_attack_fx;

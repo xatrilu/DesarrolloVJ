@@ -13,7 +13,7 @@
 #include "j1Particles.h"
 #include "j1WalkingEnemy.h"
 #include "j1FlyingEnemy.h"
-#include "jCollectible.h"
+#include "jPickUpObject.h"
 #include "brofiler/Brofiler/Brofiler.h"
 
 
@@ -31,12 +31,11 @@ j1EntityManager::j1EntityManager() {
 }
 
 
-j1EntityManager::~j1EntityManager() {
-}
+j1EntityManager::~j1EntityManager() {}
 
-j1Entity* j1EntityManager::CreateEntity(EntityType type, int position_x, int position_y) {
+j1Entity* j1EntityManager::CreateEntity(EntityType type, int position_x, int position_y) 
+{
 	BROFILER_CATEGORY("EntityCreation", Profiler::Color::Linen)
-		//static_assert(EntityType::UNKNOWN == 4, "code needs update");
 		j1Entity* entity = nullptr;
 	switch (type)
 	{
@@ -50,7 +49,7 @@ j1Entity* j1EntityManager::CreateEntity(EntityType type, int position_x, int pos
 		entity = new j1FlyingEnemy();
 		break;
 	case EntityType::COLLECTIBLE:
-		entity = new j1Collectible();
+		entity = new jPickUpObject();
 		break;
 	case EntityType::UNKNOWN:
 		break;
@@ -77,7 +76,8 @@ void j1EntityManager::DestroyEntity(j1Entity* entity) {
 	}
 }
 
-void j1EntityManager::DestroyAllEntities() {
+void j1EntityManager::DestroyAllEntities()
+{
 	p2List_item<j1Entity*>* item;
 
 	for (item = entities.start; item != nullptr; item = item->next)
@@ -87,7 +87,8 @@ void j1EntityManager::DestroyAllEntities() {
 	DestroyEntity(player_pointer);
 }
 
-bool j1EntityManager::Awake(pugi::xml_node& config) {
+bool j1EntityManager::Awake(pugi::xml_node& config)
+{
 	bool ret = true;
 
 	config_data = config;
@@ -109,7 +110,7 @@ bool j1EntityManager::Awake(pugi::xml_node& config) {
 	reference_flying_enemy->Awake(config.child("flying_enemy"));
 
 	//reference collectible
-	reference_collectible = new j1Collectible();
+	reference_collectible = new jPickUpObject();
 	reference_collectible->Awake(config.child("collectible"));
 
 	return ret;
@@ -119,7 +120,6 @@ bool j1EntityManager::Start()
 {
 	bool ret = true;
 
-	//player->Start();
 	reference_player->texture = App->tex->Load("sprites/characters/spritesheet_traveler2.png");
 	reference_walking_enemy->texture = App->tex->Load("sprites/characters/sheet_hero_idle.png");
 	reference_flying_enemy->texture = App->tex->Load("sprites/characters/Sprite_bat.png");
@@ -141,7 +141,6 @@ bool j1EntityManager::Start()
 			entity->data->texture = reference_collectible->texture;
 		}
 	}
-
 	return ret;
 }
 
@@ -199,9 +198,6 @@ bool j1EntityManager::Update(float dt)
 			entity->data->Update(dt);
 		}
 	}
-
-	//accumulated_time += dt;
-
 	return ret;
 }
 
@@ -278,7 +274,8 @@ bool j1EntityManager::Save(pugi::xml_node& data) const
 	return ret;
 }
 
-bool j1EntityManager::CheckpointSave() {
+bool j1EntityManager::CheckpointSave()
+{
 	bool ret = true;
 	LOG("Checkpoint triggered");
 

@@ -26,8 +26,8 @@
   <file_system>
     <path>data.zip</path>
   </file_system>
-
-  <audio>
+  
+ <audio>
     <music>
       <folder>audio/music/</folder>
       <musicVolumeModifier value="0.3" />
@@ -37,6 +37,7 @@
       <sfxVolumeModifier value="1" />
     </sfx>
   </audio>
+ 
 
  <map>
     <folder>maps/</folder>
@@ -83,15 +84,6 @@
       <running_speed value="100"/>
       <detection_range value="150" />
     </walking_enemy>
-    <walking_enemy2>
-      <folder>audio/fx</folder>
-      <die2FX source="WalkingEnemyDie.wav"/>
-      <Enemy_attackFX source="Enemy_attack.wav"/>
-      <health value="100"/>
-      <damage value="10"/>
-      <running_speed value="100"/>
-      <detection_range value="150" />
-    </walking_enemy2>
     <flying_enemy>
       <folder>audio/fx</folder>
       <die3FX source="FlyingEnemyDie.wav"/>
@@ -100,6 +92,10 @@
       <flying_speed value="75"/>
       <detection_range value="300" />
     </flying_enemy>
+	<collectible>
+      <folder>audio/fx</folder>
+      <coin_sound source="Coin.wav"/>
+    </collectible>
   </entities>
 
   <particles>
@@ -109,7 +105,6 @@
  
  <gui>
     <image file="sprites/UI/UISheet.png"/>
+	<clickFX source="audio/fx/UI/btnClick.wav"/>
  </gui>
-
-
 </config>

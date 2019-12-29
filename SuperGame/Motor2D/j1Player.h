@@ -33,7 +33,7 @@ public:
 	bool Save(pugi::xml_node& data) const;
 	bool Load(pugi::xml_node& data);
 
-	void OnCommand(p2SString command);
+	void Commands(p2SString command);
 
 	//bool LoadAnimations();
 
@@ -58,7 +58,7 @@ public:
 
 	bool god;
 	bool controls_blocked;
-	bool isVisible;
+	bool visible;
 
 	Collider* last_checkpoint = nullptr;
 };

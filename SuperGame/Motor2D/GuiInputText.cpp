@@ -4,21 +4,23 @@
 #include "j1Input.h"
 
 
-GuiInputText::GuiInputText(j1Module* g_callback) {
-	background = new GuiImage(g_callback);
-	text = new GuiText(g_callback);
-	callback = g_callback;
-	default_text = { "Input text" };
-	cursor = { 0,0,2,30 };
+GuiInputText::GuiInputText(j1Module* callback) 
+{
+	background = new GuiImage(callback);
+	text = new GuiText(callback);
+	callback = callback;
+	defaultText = { "Input text" };
+	mouse = { 0,0,2,30 };
 	focused = false;
 	usingAtlas = true;
-	cursor_position = 0;
+	mousePos = 0;
 	to_delete = false;
 }
 
 GuiInputText::~GuiInputText() {}
 
-bool GuiInputText::CleanUp() {
+bool GuiInputText::CleanUp()
+{
 	bool ret = true;
 	ret = background->CleanUp();
 	delete background;
@@ -29,33 +31,32 @@ bool GuiInputText::CleanUp() {
 	return ret;
 }
 
-void GuiInputText::Init(iPoint position, p2SString g_text, SDL_Rect image_section, bool useAtlas, char* g_font) {
-
-	screen_pos = position;
-	rect = { position.x, position.y, image_section.w, image_section.h };
-	default_text = g_text;
+void GuiInputText::Init(iPoint pos, p2SString _text, SDL_Rect imgSection, bool useAtlas, char* _font) 
+{
+	screenPos = pos;
+	rect = { pos.x, pos.y, imgSection.w, imgSection.h };
+	defaultText = _text;
 
 	background->parent = text->parent = (j1UI_Element*)this;
 	background->draggable = text->draggable = false;
 
-	rect.x = screen_pos.x;
-	rect.y = screen_pos.y;
+	rect.x = screenPos.x;
+	rect.y = screenPos.y;
 
 	if (parent != nullptr)
 	{
-		local_pos.x = screen_pos.x - parent->screen_pos.x;
-		local_pos.y = screen_pos.y - parent->screen_pos.y;
+		localPos.x = screenPos.x - parent->screenPos.x;
+		localPos.y = screenPos.y - parent->screenPos.y;
 	}
 
-	if (useAtlas = false)
-		usingAtlas = false;
+	if (useAtlas == false) usingAtlas = false;
+	if (useAtlas) background->Init(pos, imgSection);
 
-	if (useAtlas) background->Init(position, image_section);
-
-	text->Init({ position.x + 10,(int)(position.y + rect.h * 0.25f) }, g_text, g_font);
+	text->Init({ pos.x + 10,(int)(pos.y + rect.h * 0.25f) }, _text, _font);
 }
 
-bool GuiInputText::Input() {
+bool GuiInputText::Input()
+{
 	if (App->input->GetKey(SDL_SCANCODE_BACKSPACE) == KEY_DOWN)
 	{
 		int end;
@@ -66,47 +67,43 @@ bool GuiInputText::Input() {
 	return true;
 }
 
-bool GuiInputText::Update(float dt) {
+bool GuiInputText::Update(float dt) 
+{
 	bool ret = true;
 	int width;
 
 	if (parent != nullptr)
 	{
-		screen_pos.x = parent->screen_pos.x + local_pos.x;
-		screen_pos.y = parent->screen_pos.y + local_pos.y;
+		screenPos.x = parent->screenPos.x + localPos.x;
+		screenPos.y = parent->screenPos.y + localPos.y;
 	}
-
-	rect.x = screen_pos.x - App->render->camera.x;
-	rect.y = screen_pos.y - App->render->camera.y;
+	rect.x = screenPos.x - App->render->camera.x;
+	rect.y = screenPos.y - App->render->camera.y;
 
 	if (usingAtlas) background->Update(dt);
 	text->Update(dt);
 
 	if (text->text.Length() > 0)
 	{
-		App->font->CalcSize(text->text.GetString(), width, cursor.y, App->font->console_font);
-		cursor.x = background->GetScreenRect().x + cursor.w + 20 + width;
-		cursor.y = rect.y + rect.h * 0.5f - cursor.h * 0.5f;
+		App->font->CalcSize(text->text.GetString(), width, mouse.y, App->font->console_font);
+		mouse.x = background->GetScreenRect().x + mouse.w + 20 + width;
+		mouse.y = rect.y + rect.h * 0.5f - mouse.h * 0.5f;
 	}
-
-
 	return ret;
 }
 
-bool GuiInputText::Draw() {
-
+bool GuiInputText::Draw()
+{
 	if (usingAtlas) background->Draw();
-
 	text->Draw();
-
-	if (focused)App->render->DrawQuad(cursor, 255, 255, 255, 255);
-
+	if (focused)App->render->DrawQuad(mouse, 255, 255, 255, 255);
 	return true;
 }
 
-void GuiInputText::HandleFocusEvent(FocusEvent event) {
+void GuiInputText::HandleFocusEvent(FocusEvent event) 
+{
 	if (event == FocusEvent::FOCUS_IN) {
-		if (text->text == default_text)
+		if (text->text == defaultText)
 		{
 			text->text.Clear();
 		}
@@ -114,7 +111,6 @@ void GuiInputText::HandleFocusEvent(FocusEvent event) {
 		App->input->text = (char*)text->text.GetString();
 		focused = true;
 	}
-
 	if (event == FocusEvent::FOCUS_OUT)
 	{
 		focused = false;
@@ -122,11 +118,8 @@ void GuiInputText::HandleFocusEvent(FocusEvent event) {
 	}
 }
 
-GuiText* GuiInputText::GetText() const {
-	return text;
-}
-
-void GuiInputText::UpdateText() {
+void GuiInputText::UpdateText()
+{
 	if (text != nullptr)
 	{
 		if (text->font == DEFAULT_FONT)
@@ -139,3 +132,5 @@ void GuiInputText::UpdateText() {
 		}
 	}
 }
+
+GuiText* GuiInputText::GetText() const { return text; }

@@ -4,48 +4,50 @@
 #include "j1Render.h"
 #include "j1Textures.h"
 
-GuiImage::GuiImage(j1Module* g_callback) {
+GuiImage::GuiImage(j1Module* callback) 
+{
 	texture = (SDL_Texture*)App->gui->GetAtlas();
-	callback = g_callback;
+	callback = callback;
 	to_delete = false;
 }
 
-void GuiImage::Init(iPoint position, SDL_Rect g_section) {
-	screen_pos = position;
-	section = g_section;
-	rect.x = screen_pos.x;
-	rect.y = screen_pos.y;
+void GuiImage::Init(iPoint pos, SDL_Rect _section) 
+{
+	screenPos = pos;
+	section = _section;
+	rect.x = screenPos.x;
+	rect.y = screenPos.y;
 	rect.w = section.w;
 	rect.h = section.h;
-
 	if (parent != nullptr)
 	{
-		local_pos.x = screen_pos.x - parent->screen_pos.x;
-		local_pos.y = screen_pos.y - parent->screen_pos.y;
+		localPos.x = screenPos.x - parent->screenPos.x;
+		localPos.y = screenPos.y - parent->screenPos.y;
 	}
 }
 
-bool GuiImage::CleanUp() {
+bool GuiImage::Update(float dt)
+{
+	bool ret = true;
+	if (parent != nullptr)
+	{
+		screenPos.x = parent->screenPos.x + localPos.x;
+		screenPos.y = parent->screenPos.y + localPos.y;
+	}
+	rect.x = screenPos.x - App->render->camera.x;
+	rect.y = screenPos.y - App->render->camera.y;
+	return ret;
+}
+
+bool GuiImage::Draw() 
+{
+	App->render->Blit(texture, rect.x, rect.y, &section);
+	return true;
+}
+
+bool GuiImage::CleanUp()
+{
 	bool ret = true;
 	texture = nullptr;
 	return ret;
-}
-
-
-bool GuiImage::Update(float dt) {
-	bool ret = true;
-	if (parent != nullptr)
-	{
-		screen_pos.x = parent->screen_pos.x + local_pos.x;
-		screen_pos.y = parent->screen_pos.y + local_pos.y;
-	}
-
-	rect.x = screen_pos.x - App->render->camera.x;
-	rect.y = screen_pos.y - App->render->camera.y;
-	return ret;
-}
-
-bool GuiImage::Draw() {
-	App->render->Blit(texture, rect.x, rect.y, &section);
-	return true;
 }

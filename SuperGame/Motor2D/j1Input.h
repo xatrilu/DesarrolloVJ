@@ -83,7 +83,7 @@ private:
 public:
 	char* text;
 	char* composition;
-	uint32		cursor;
+	uint32		mouse;
 	uint32		selection_len;
 };
 

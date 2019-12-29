@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="4" height="4" tilewidth="32" tileheight="32" nextobjectid="1">
+ <tileset firstgid="1" name="coin" tilewidth="32" tileheight="32" tilecount="16" columns="4">
+  <image source="coin.png" width="128" height="128"/>
+  <tile id="0">
+   <properties>
+    <property name="idle" value=""/>
+   </properties>
+   <animation>
+    <frame tileid="0" duration="250"/>
+    <frame tileid="1" duration="250"/>
+    <frame tileid="2" duration="250"/>
+    <frame tileid="3" duration="250"/>
+    <frame tileid="4" duration="250"/>
+    <frame tileid="5" duration="250"/>
+    <frame tileid="6" duration="250"/>
+    <frame tileid="7" duration="250"/>
+    <frame tileid="8" duration="250"/>
+    <frame tileid="9" duration="250"/>
+   </animation>
+  </tile>
+ </tileset>
+ <layer name="Tile Layer 1" width="4" height="4">
+  <data encoding="base64">
+   AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==
+  </data>
+ </layer>
+</map>

@@ -1987,8 +1987,8 @@ PUGI__NS_BEGIN
 	#define PUGI__ENDSWITH(c, e)        ((c) == (e) || ((c) == 0 && endch == (e)))
 	#define PUGI__SKIPWS()              { while (PUGI__IS_CHARTYPE(*s, ct_space)) ++s; }
 	#define PUGI__OPTSET(OPT)           ( optmsk & (OPT) )
-	#define PUGI__PUSHNODE(TYPE)        { cursor = append_new_node(cursor, alloc, TYPE); if (!cursor) PUGI__THROW_ERROR(status_out_of_memory, s); }
-	#define PUGI__POPNODE()             { cursor = cursor->parent; }
+	#define PUGI__PUSHNODE(TYPE)        { mouse = append_new_node(mouse, alloc, TYPE); if (!mouse) PUGI__THROW_ERROR(status_out_of_memory, s); }
+	#define PUGI__POPNODE()             { mouse = mouse->parent; }
 	#define PUGI__SCANFOR(X)            { while (*s != 0 && !(X)) ++s; }
 	#define PUGI__SCANWHILE(X)          { while (X) ++s; }
 	#define PUGI__SCANWHILE_UNROLL(X)   { for (;;) { char_t ss = s[0]; if (PUGI__UNLIKELY(!(X))) { break; } ss = s[1]; if (PUGI__UNLIKELY(!(X))) { s += 1; break; } ss = s[2]; if (PUGI__UNLIKELY(!(X))) { s += 2; break; } ss = s[3]; if (PUGI__UNLIKELY(!(X))) { s += 3; break; } s += 4; } }
@@ -2436,7 +2436,7 @@ PUGI__NS_BEGIN
 			return s;
 		}
 
-		char_t* parse_exclamation(char_t* s, xml_node_struct* cursor, unsigned int optmsk, char_t endch)
+		char_t* parse_exclamation(char_t* s, xml_node_struct* mouse, unsigned int optmsk, char_t endch)
 		{
 			// parse node contents, starting with exclamation mark
 			++s;
@@ -2452,14 +2452,14 @@ PUGI__NS_BEGIN
 					if (PUGI__OPTSET(parse_comments))
 					{
 						PUGI__PUSHNODE(node_comment); // Append a new node on the tree.
-						cursor->value = s; // Save the offset.
+						mouse->value = s; // Save the offset.
 					}
 
 					if (PUGI__OPTSET(parse_eol) && PUGI__OPTSET(parse_comments))
 					{
 						s = strconv_comment(s, endch);
 
-						if (!s) PUGI__THROW_ERROR(status_bad_comment, cursor->value);
+						if (!s) PUGI__THROW_ERROR(status_bad_comment, mouse->value);
 					}
 					else
 					{
@@ -2485,13 +2485,13 @@ PUGI__NS_BEGIN
 					if (PUGI__OPTSET(parse_cdata))
 					{
 						PUGI__PUSHNODE(node_cdata); // Append a new node on the tree.
-						cursor->value = s; // Save the offset.
+						mouse->value = s; // Save the offset.
 
 						if (PUGI__OPTSET(parse_eol))
 						{
 							s = strconv_cdata(s, endch);
 
-							if (!s) PUGI__THROW_ERROR(status_bad_cdata, cursor->value);
+							if (!s) PUGI__THROW_ERROR(status_bad_cdata, mouse->value);
 						}
 						else
 						{
@@ -2519,7 +2519,7 @@ PUGI__NS_BEGIN
 			{
 				s -= 2;
 
-				if (cursor->parent) PUGI__THROW_ERROR(status_bad_doctype, s);
+				if (mouse->parent) PUGI__THROW_ERROR(status_bad_doctype, s);
 
 				char_t* mark = s + 9;
 
@@ -2535,7 +2535,7 @@ PUGI__NS_BEGIN
 
 					PUGI__PUSHNODE(node_doctype);
 
-					cursor->value = mark;
+					mouse->value = mark;
 				}
 			}
 			else if (*s == 0 && endch == '-') PUGI__THROW_ERROR(status_bad_comment, s);
@@ -2548,7 +2548,7 @@ PUGI__NS_BEGIN
 		char_t* parse_question(char_t* s, xml_node_struct*& ref_cursor, unsigned int optmsk, char_t endch)
 		{
 			// load into registers
-			xml_node_struct* cursor = ref_cursor;
+			xml_node_struct* mouse = ref_cursor;
 			char_t ch = 0;
 
 			// parse node contents, starting with question mark
@@ -2570,7 +2570,7 @@ PUGI__NS_BEGIN
 				if (declaration)
 				{
 					// disallow non top-level declarations
-					if (cursor->parent) PUGI__THROW_ERROR(status_bad_pi, s);
+					if (mouse->parent) PUGI__THROW_ERROR(status_bad_pi, s);
 
 					PUGI__PUSHNODE(node_declaration);
 				}
@@ -2579,7 +2579,7 @@ PUGI__NS_BEGIN
 					PUGI__PUSHNODE(node_pi);
 				}
 
-				cursor->name = target;
+				mouse->name = target;
 
 				PUGI__ENDSEG();
 
@@ -2613,7 +2613,7 @@ PUGI__NS_BEGIN
 					else
 					{
 						// store value and step over >
-						cursor->value = value;
+						mouse->value = value;
 						PUGI__POPNODE();
 
 						PUGI__ENDSEG();
@@ -2633,7 +2633,7 @@ PUGI__NS_BEGIN
 			}
 
 			// store from registers
-			ref_cursor = cursor;
+			ref_cursor = mouse;
 
 			return s;
 		}
@@ -2644,7 +2644,7 @@ PUGI__NS_BEGIN
 			strconv_pcdata_t strconv_pcdata = get_strconv_pcdata(optmsk);
 			
 			char_t ch = 0;
-			xml_node_struct* cursor = root;
+			xml_node_struct* mouse = root;
 			char_t* mark = s;
 
 			while (*s != 0)
@@ -2658,7 +2658,7 @@ PUGI__NS_BEGIN
 					{
 						PUGI__PUSHNODE(node_element); // Append a new node to the tree.
 
-						cursor->name = s;
+						mouse->name = s;
 
 						PUGI__SCANWHILE_UNROLL(PUGI__IS_CHARTYPE(ss, ct_symbol)); // Scan for a terminator.
 						PUGI__ENDSEG(); // Save char in 'ch', terminate & step over.
@@ -2676,7 +2676,7 @@ PUGI__NS_BEGIN
 						
 								if (PUGI__IS_CHARTYPE(*s, ct_start_symbol)) // <... #...
 								{
-									xml_attribute_struct* a = append_new_attribute(cursor, alloc); // Make space for this attribute.
+									xml_attribute_struct* a = append_new_attribute(mouse, alloc); // Make space for this attribute.
 									if (!a) PUGI__THROW_ERROR(status_out_of_memory, s);
 
 									a->name = s; // Save the offset.
@@ -2768,7 +2768,7 @@ PUGI__NS_BEGIN
 					{
 						++s;
 
-						char_t* name = cursor->name;
+						char_t* name = mouse->name;
 						if (!name) PUGI__THROW_ERROR(status_end_element_mismatch, s);
 						
 						while (PUGI__IS_CHARTYPE(*s, ct_symbol))
@@ -2798,15 +2798,15 @@ PUGI__NS_BEGIN
 					}
 					else if (*s == '?') // '<?...'
 					{
-						s = parse_question(s, cursor, optmsk, endch);
+						s = parse_question(s, mouse, optmsk, endch);
 						if (!s) return s;
 
-						assert(cursor);
-						if (PUGI__NODETYPE(cursor) == node_declaration) goto LOC_ATTRIBUTES;
+						assert(mouse);
+						if (PUGI__NODETYPE(mouse) == node_declaration) goto LOC_ATTRIBUTES;
 					}
 					else if (*s == '!') // '<!...'
 					{
-						s = parse_exclamation(s, cursor, optmsk, endch);
+						s = parse_exclamation(s, mouse, optmsk, endch);
 						if (!s) return s;
 					}
 					else if (*s == 0 && endch == '?') PUGI__THROW_ERROR(status_bad_pi, s);
@@ -2829,17 +2829,17 @@ PUGI__NS_BEGIN
 						}
 						else if (PUGI__OPTSET(parse_ws_pcdata_single))
 						{
-							if (s[0] != '<' || s[1] != '/' || cursor->first_child) continue;
+							if (s[0] != '<' || s[1] != '/' || mouse->first_child) continue;
 						}
 					}
 
 					if (!PUGI__OPTSET(parse_trim_pcdata))
 						s = mark;
 							
-					if (cursor->parent || PUGI__OPTSET(parse_fragment))
+					if (mouse->parent || PUGI__OPTSET(parse_fragment))
 					{
 						PUGI__PUSHNODE(node_pcdata); // Append a new node on the tree.
-						cursor->value = s; // Save the offset.
+						mouse->value = s; // Save the offset.
 
 						s = strconv_pcdata(s);
 								
@@ -2861,7 +2861,7 @@ PUGI__NS_BEGIN
 			}
 
 			// check that last tag is closed
-			if (cursor != root) PUGI__THROW_ERROR(status_end_element_mismatch, s);
+			if (mouse != root) PUGI__THROW_ERROR(status_end_element_mismatch, s);
 
 			return s;
 		}
@@ -5328,15 +5328,15 @@ namespace pugi
 #ifndef PUGIXML_NO_STL
 	PUGI__FN string_t xml_node::path(char_t delimiter) const
 	{
-		xml_node cursor = *this; // Make a copy.
+		xml_node mouse = *this; // Make a copy.
 		
-		string_t result = cursor.name();
+		string_t result = mouse.name();
 
-		while (cursor.parent())
+		while (mouse.parent())
 		{
-			cursor = cursor.parent();
+			mouse = mouse.parent();
 			
-			string_t temp = cursor.name();
+			string_t temp = mouse.name();
 			temp += delimiter;
 			temp += result;
 			result.swap(temp);

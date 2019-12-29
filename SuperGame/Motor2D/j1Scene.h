@@ -54,16 +54,13 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
-	//void ResetCamera(int kind_of_reset);
-	//void ResetLevel();
 	void LevelChange(Map unloading_map, Map loading_map);
 	void CreatePauseMenu();
 	void DeletePauseMenu();
-	void CreateSettingsScreen();
 	void DestroySpecificMenu(Menu menu);
 
 	void OnEvent(j1UI_Element*, FocusEvent);
-	void OnCommand(p2SString command);
+	void Commands(p2SString command);
 
 	void CreateScreenUI();
 
@@ -87,52 +84,33 @@ public:
 	bool blocked_camera;
 	bool showing_menu;
 	bool fullscreen;
-	int window_width;
-	int window_height;
+	int winWidth;
+	int winHeight;
 
 	//UI Info
 
 	//int score;
-	int time_left;
-	int max_time;
-	int time_star1;
-	int time_star2;
-	int time_star3;
-	int relative_max_time;
-	int time_discount;
-	j1Timer timer;
-	j1Timer performance_timer;
-	GuiText* time_text;
-	GuiText* time_count;
 	GuiText* score;
-	//GuiSlider* slider;
 	p2List<GuiImage*> lives;
-	p2List<GuiImage*> stars;
-	GuiImage* star1;
-	GuiImage* star2;
-	GuiImage* star3;
-	GuiImage* coins;
-	GuiImage* timer_background;
+	GuiImage* stars;
 
 	//levels
-	Map current_level;
-	Menu visible_menu;
+	Map currentLevel;
+	Menu openMenu;
 
 	p2SString song;
 	p2SString folder;
 
 	int camera_margin;
-	iPoint initial_camera_position;
+	iPoint startCameraPos;
 
 	//pause menu
 	p2List<j1UI_Element*> pause_menu;
-	p2List<j1UI_Element*> settings_screen;
-	p2List<j1UI_Element*> on_screen_ui;
+	p2List<j1UI_Element*> ScreenUI;
 
 private:
-	int on_screen_lives;
-	int on_screen_stars;
-	int on_screen_score;
+	int uiLives;
+	int uiScore;
 };
 
 #endif // __j1SCENE_H__

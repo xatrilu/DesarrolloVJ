@@ -16,11 +16,9 @@ j1Gui::j1Gui() : j1Module()
 	atlas = nullptr;
 }
 
-// Destructor
-j1Gui::~j1Gui()
-{}
+j1Gui::~j1Gui(){}
 
-// Called before render is available
+
 bool j1Gui::Awake(pugi::xml_node& conf)
 {
 	LOG("Loading GUI spritesheet");
@@ -31,7 +29,7 @@ bool j1Gui::Awake(pugi::xml_node& conf)
 	return ret;
 }
 
-// Called before the first frame
+
 bool j1Gui::Start()
 {
 	atlas = App->tex->Load(atlas_file_name.GetString());
@@ -39,20 +37,16 @@ bool j1Gui::Start()
 	return true;
 }
 
-// Update all guis
+
 bool j1Gui::PreUpdate()
 {
 	BROFILER_CATEGORY("GuiPreUpdate", Profiler::Color::Lime)
 
-		if (App->input->GetKey(SDL_SCANCODE_F8) == KEY_DOWN)
-			debug = !debug;
+		if (App->input->GetKey(SDL_SCANCODE_F8) == KEY_DOWN) debug = !debug;
 
-	for (p2List_item<j1UI_Element*>* item = ui_elements.end; item != nullptr; item = item->prev)
+	for (p2List_item<j1UI_Element*>* item = UIelements.end; item != nullptr; item = item->prev)
 	{
-		if (item->data->to_delete)
-		{
-			DestroyUIElement(item->data);
-		}
+		if (item->data->to_delete) DestroyUIElement(item->data);
 		else
 		{
 			iPoint mouse_motion;
@@ -62,9 +56,9 @@ bool j1Gui::PreUpdate()
 			{
 				if ((item->data->draggable) && (focused_element == item->data)) 
 				{
-					item->data->screen_pos.x += mouse_motion.x;					
+					item->data->screenPos.x += mouse_motion.x;					
 					item->data->parent->Input();				
-					focused_element = item->data;
+					focused_element = item->data;				
 				}
 			}
 
@@ -93,16 +87,16 @@ bool j1Gui::PreUpdate()
 			if (App->input->GetKey(SDL_SCANCODE_TAB) == KEY_DOWN) {
 				if (focused_element == nullptr)
 				{
-					focused_element = ui_elements.start->data;
+					focused_element = UIelements.start->data;
 				}
 				else
 				{
-					int item = ui_elements.find(focused_element);
-					if (item == ui_elements.count() - 1)
+					int item = UIelements.find(focused_element);
+					if (item == UIelements.count() - 1)
 					{
 						item = -1;
 					}
-					focused_element = ui_elements[item + 1];
+					focused_element = UIelements[item + 1];
 				}
 			}
 		}
@@ -111,31 +105,29 @@ bool j1Gui::PreUpdate()
 }
 
 
-bool j1Gui::Update(float dt) {
+bool j1Gui::Update(float dt) 
+{
 	BROFILER_CATEGORY("GuiUpdate", Profiler::Color::BlueViolet)
-		bool ret = true;
-	for (p2List_item<j1UI_Element*>* item = ui_elements.start; item != nullptr; item = item->next)
+	bool ret = true;
+	for (p2List_item<j1UI_Element*>* item = UIelements.start; item != nullptr; item = item->next)
 	{
 		item->data->Update(dt);
 	}
 	return ret;
 }
 
-// Called after all Updates
 bool j1Gui::PostUpdate()
 {
 	BROFILER_CATEGORY("GuiPostUpdate", Profiler::Color::DarkKhaki)
-		for (p2List_item<j1UI_Element*>* item = ui_elements.start; item != nullptr; item = item->next)
-		{
-			item->data->Draw();
-		}
-
+	for (p2List_item<j1UI_Element*>* item = UIelements.start; item != nullptr; item = item->next)
+	{
+		item->data->Draw();
+	}
 	if (debug) DebugDraw();
-
 	return true;
 }
 
-// Called before quitting
+
 bool j1Gui::CleanUp()
 {
 	LOG("Freeing GUI");
@@ -145,15 +137,10 @@ bool j1Gui::CleanUp()
 	return true;
 }
 
-// const getter for atlas
-SDL_Texture* j1Gui::GetAtlas() const
+SDL_Texture* j1Gui::GetAtlas() const { return atlas; }
+
+j1UI_Element* j1Gui::CreateUIElement(UI_Type type, j1Module* callback, j1UI_Element* parent, bool draggable, bool interactable) 
 {
-	return atlas;
-}
-
-// class Gui ---------------------------------------------------
-
-j1UI_Element* j1Gui::CreateUIElement(UI_Type type, j1Module* callback, j1UI_Element* parent, bool draggable, bool interactable) {
 
 	j1UI_Element* ui_element = nullptr;
 
@@ -171,57 +158,56 @@ j1UI_Element* j1Gui::CreateUIElement(UI_Type type, j1Module* callback, j1UI_Elem
 	case UI_Type::INPUT_TEXT:
 		ui_element = new GuiInputText(callback);
 		break;
-	/*case UI_Type::SLIDER:
-		ui_element = new GuiSlider(callback);*/
 	case UI_Type::MAX_UI_ELEMENTS:
 		break;
 	default:
 		break;
 	}
-
 	ui_element->draggable = draggable;
 	ui_element->interactable = interactable;
 	ui_element->parent = parent;
 	ui_element->type = type;
 
-	ui_elements.add(ui_element);
-
+	UIelements.add(ui_element);
 	return ui_element;
 }
 
-void j1Gui::DestroyUIElement(j1UI_Element* element) {
-
-	for (p2List_item<j1UI_Element*>* item = ui_elements.start; item != nullptr; item = item->next)
+void j1Gui::DestroyUIElement(j1UI_Element* element) 
+{
+	for (p2List_item<j1UI_Element*>* item = UIelements.start; item != nullptr; item = item->next)
 	{
-		if (item->data == element) {
+		if (item->data == element) 
+		{
 			item->data->CleanUp();
 			delete item->data;
 			item->data = nullptr;
-			ui_elements.del(item);
+			UIelements.del(item);
 		}
 	}
 }
 
-void j1Gui::DestroyAllGui() {
+void j1Gui::DestroyAllGui() 
+{
 
-	for (p2List_item<j1UI_Element*>* item = ui_elements.start; item != nullptr; item = item->next)
+	for (p2List_item<j1UI_Element*>* item = UIelements.start; item != nullptr; item = item->next)
 	{
 		DestroyUIElement(item->data);
 	}
-	ui_elements.clear();
+	UIelements.clear();
 	focused_element = nullptr;
 }
 
-void j1Gui::DestroyUIlist(p2List<j1UI_Element*> list) {
+void j1Gui::DestroyUIlist(p2List<j1UI_Element*> list)
+{
 	for (p2List_item<j1UI_Element*>* item = list.start; item != nullptr; item = item->next)
 	{
 		item->data->CleanUp();
 	}
 }
 
-void j1Gui::DebugDraw() {
-
-	for (p2List_item<j1UI_Element*>* item = ui_elements.start; item != nullptr; item = item->next)
+void j1Gui::DebugDraw() 
+{
+	for (p2List_item<j1UI_Element*>* item = UIelements.start; item != nullptr; item = item->next)
 	{
 		if (focused_element == item->data) {
 			App->render->DrawQuad(item->data->rect, 0, 255, 0, 255, false);

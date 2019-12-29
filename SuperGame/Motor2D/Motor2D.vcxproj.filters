@@ -97,7 +97,7 @@
     <ClCompile Include="MainMenu.cpp">
       <Filter>Desenvolupament  ========\Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="jCollectible.cpp">
+    <ClCompile Include="jPickUpObject.cpp">
       <Filter>Desenvolupament  ========\Entities</Filter>
     </ClCompile>
   </ItemGroup>
@@ -222,7 +222,7 @@
     <ClInclude Include="MainMenu.h">
       <Filter>Desenvolupament  ========\Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="jCollectible.h">
+    <ClInclude Include="jPickUpObject.h">
       <Filter>Desenvolupament  ========\Entities</Filter>
     </ClInclude>
   </ItemGroup>

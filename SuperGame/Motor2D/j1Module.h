@@ -71,7 +71,7 @@ public:
 
 	virtual void OnEvent(j1UI_Element*, FocusEvent) {}
 
-	virtual void OnCommand(p2SString) {};
+	virtual void Commands(p2SString) {};
 
 public:
 

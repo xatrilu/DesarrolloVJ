@@ -3,7 +3,8 @@
 #include "j1Render.h"
 #include "j1Textures.h"
 
-GuiText::GuiText() {
+GuiText::GuiText()
+{
 	callback = nullptr;
 	font = DEFAULT_FONT;
 	parent = nullptr;
@@ -12,17 +13,19 @@ GuiText::GuiText() {
 	interactable = false;
 }
 
-GuiText::GuiText(j1Module* g_callback) {
-	callback = g_callback;
+GuiText::GuiText(j1Module* callback) 
+{
+	callback = callback;
 	font = DEFAULT_FONT;
 }
 
 GuiText::~GuiText() {}
 
-void GuiText::Init(iPoint g_position, p2SString g_text, char* g_font) {
-	screen_pos = g_position;
-	text = g_text;
-	font = g_font;
+void GuiText::Init(iPoint pos, p2SString _text, char* _font) 
+{
+	screenPos = pos;
+	text = _text;
+	font = _font;
 
 	if (text.Length() > 0)
 	{
@@ -40,52 +43,44 @@ void GuiText::Init(iPoint g_position, p2SString g_text, char* g_font) {
 
 	if (parent != nullptr)
 	{
-		local_pos.x = screen_pos.x - parent->screen_pos.x;
-		local_pos.y = screen_pos.y - parent->screen_pos.y;
+		localPos.x = screenPos.x - parent->screenPos.x;
+		localPos.y = screenPos.y - parent->screenPos.y;
 	}
 
-	rect.x = screen_pos.x;
-	rect.y = screen_pos.y;
+	rect.x = screenPos.x;
+	rect.y = screenPos.y;
 }
 
-bool GuiText::CleanUp() {
+bool GuiText::CleanUp() 
+{
 	bool ret = true;
 	App->tex->UnLoad(texture);
 	texture = nullptr;
 	return ret;
 }
 
-bool GuiText::Update(float dt) {
-
+bool GuiText::Update(float dt) 
+{
 	bool ret = true;
 
 	if (parent != nullptr)
 	{
-		screen_pos.x = parent->screen_pos.x + local_pos.x;
-		screen_pos.y = parent->screen_pos.y + local_pos.y;
+		screenPos.x = parent->screenPos.x + localPos.x;
+		screenPos.y = parent->screenPos.y + localPos.y;
 	}
-
-	rect.x = screen_pos.x - App->render->camera.x;
-	rect.y = screen_pos.y - App->render->camera.y;
-
+	rect.x = screenPos.x - App->render->camera.x;
+	rect.y = screenPos.y - App->render->camera.y;
 	return ret;
 }
 
-bool GuiText::Draw() {
-
-	if (text.Length() > 0)
-	{
-		if (texture != nullptr)
-		{
-			App->render->Blit(texture, rect.x, rect.y);
-		}
-	}
-
+bool GuiText::Draw() 
+{
+	if (text.Length() > 0) if (texture != nullptr) App->render->Blit(texture, rect.x, rect.y);	
 	return true;
 }
 
-void GuiText::UpdateText() {
-
+void GuiText::UpdateText() 
+{
 	if (font == DEFAULT_FONT)
 	{
 		App->tex->UnLoad(texture);

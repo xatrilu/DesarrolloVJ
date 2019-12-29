@@ -9,23 +9,25 @@
 #include "j1EntityManager.h"
 #include "brofiler/Brofiler/Brofiler.h"
 
-Console::Console() : j1Module() {
-	isVisible = false;
+Console::Console() : j1Module() 
+{
+	visible = false;
 	CleanUpStarted = false;
-	l = 0;
 	command_input = nullptr;
-	current_consulting_command = nullptr;
+	currentCommand = nullptr;
 }
 
 Console::~Console() {}
 
-bool Console::Awake(pugi::xml_node& config) {
+bool Console::Awake(pugi::xml_node& config) 
+{
 	bool ret = true;
 
 	return ret;
 }
 
-bool Console::Start() {
+bool Console::Start()
+{
 	bool ret = true;
 	AddLogText("Console started");
 
@@ -36,18 +38,20 @@ bool Console::Start() {
 	return ret;
 }
 
-bool Console::PreUpdate() {
+bool Console::PreUpdate()
+{
 	bool ret = true;
 	return ret;
 }
 
-bool Console::Update(float dt) {
+bool Console::Update(float dt)
+{
 	BROFILER_CATEGORY("ConsoleUpdate", Profiler::Color::MediumPurple)
 		bool ret = true;
 
 	if (App->input->GetKey(SDL_SCANCODE_GRAVE) == KEY_DOWN)
 	{
-		if (isVisible)
+		if (visible)
 		{
 			DestroyInterface();
 		}
@@ -57,7 +61,8 @@ bool Console::Update(float dt) {
 		}
 	}
 
-	if (isVisible) {
+	if (visible) 
+	{
 		if ((App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN))
 		{
 			DestroyInterface();
@@ -74,37 +79,39 @@ bool Console::Update(float dt) {
 			CheckCommand(input_text);
 		}
 
-		if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_DOWN) {
+		if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_DOWN) 
+		{
 			if (input_commands.end != nullptr)
 			{
-				if (current_consulting_command == nullptr)
+				if (currentCommand == nullptr)
 				{
-					current_consulting_command = input_commands.end;
-					command_input->GetText()->text = current_consulting_command->data;
+					currentCommand = input_commands.end;
+					command_input->GetText()->text = currentCommand->data;
 				}
 				else
 				{
-					if (current_consulting_command->prev != nullptr) {
-						current_consulting_command = current_consulting_command->prev;
-						command_input->GetText()->text = current_consulting_command->data;
+					if (currentCommand->prev != nullptr) {
+						currentCommand = currentCommand->prev;
+						command_input->GetText()->text = currentCommand->data;
 					}
 				}
 			}
 		}
 
-		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_DOWN) {
+		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_DOWN) 
+		{
 			if (input_commands.end != nullptr)
 			{
-				if (current_consulting_command == nullptr)
+				if (currentCommand == nullptr)
 				{
-					current_consulting_command = input_commands.end;
-					command_input->GetText()->text = current_consulting_command->data;
+					currentCommand = input_commands.end;
+					command_input->GetText()->text = currentCommand->data;
 				}
 				else
 				{
-					if (current_consulting_command->next != nullptr) {
-						current_consulting_command = current_consulting_command->next;
-						command_input->GetText()->text = current_consulting_command->data;
+					if (currentCommand->next != nullptr) {
+						currentCommand = currentCommand->next;
+						command_input->GetText()->text = currentCommand->data;
 					}
 				}
 			}
@@ -115,18 +122,19 @@ bool Console::Update(float dt) {
 	return ret;
 }
 
-bool Console::PostUpdate() {
+bool Console::PostUpdate() 
+{
 	BROFILER_CATEGORY("GuiPostUpdate", Profiler::Color::DarkViolet)
 		bool ret = true;
 
-	if (isVisible)
+	if (visible)
 	{
 		//Draw console
-		App->render->DrawQuad(log_box, 0, 0, 0, 255);
+		App->render->DrawQuad(LOGBox, 0, 0, 0, 255);
 		App->render->DrawQuad(command_background, 0, 0, 255, 255);
 		command_input->Draw();
 
-		for (p2List_item<GuiText*>* item = on_screen_log.start; item != nullptr; item = item->next)
+		for (p2List_item<GuiText*>* item = screenLOG.start; item != nullptr; item = item->next)
 		{
 			item->data->Draw();
 		}
@@ -134,27 +142,29 @@ bool Console::PostUpdate() {
 	return ret;
 }
 
-bool Console::CleanUp() {
+bool Console::CleanUp()
+{
 	bool ret = true;
 	CleanUpStarted = true;
 
-	for (p2List_item<GuiText*>* item = on_screen_log.start; item != nullptr; item = item->next)
+	for (p2List_item<GuiText*>* item = screenLOG.start; item != nullptr; item = item->next)
 	{
 		App->gui->DestroyUIElement(item->data);
-		on_screen_log.del(item);
+		screenLOG.del(item);
 	}
 
 	return ret;
 }
 
-void Console::CreateInterface() {
+void Console::CreateInterface() 
+{
 	App->input->EnableTextInput(true);
 	iPoint camera = { App->render->camera.x, App->render->camera.y };
-	log_box = { -camera.x, -camera.y, (int)App->win->width, 350 };
-	command_background = { -camera.x, log_box.h - camera.y, (int)App->win->width, 40 };
+	LOGBox = { -camera.x, -camera.y, (int)App->win->width, 350 };
+	command_background = { -camera.x, LOGBox.h - camera.y, (int)App->win->width, 40 };
 
 	command_input = (GuiInputText*)App->gui->CreateUIElement(UI_Type::INPUT_TEXT, this, nullptr, false, true);
-	command_input->Init({ 10, log_box.h }, "Write Command", { 0,(int)(log_box.y + log_box.h),(int)App->win->width, command_background.h }, false, CONSOLE_FONT);
+	command_input->Init({ 10, LOGBox.h }, "Write Command", { 0,(int)(LOGBox.y + LOGBox.h),(int)App->win->width, command_background.h }, false, CONSOLE_FONT);
 	command_input->rect = command_background;
 
 	App->gui->focused_element = command_input;
@@ -169,24 +179,24 @@ void Console::CreateInterface() {
 		}
 		else
 		{
-			log_text->Init({ 20 - App->render->camera.x, (int)(on_screen_log.end->data->screen_pos.y + on_screen_log.end->data->rect.h) }, item->data, CONSOLE_FONT);
+			log_text->Init({ 20 - App->render->camera.x, (int)(screenLOG.end->data->screenPos.y + screenLOG.end->data->rect.h) }, item->data, CONSOLE_FONT);
 		}
-		on_screen_log.add(log_text);
+		screenLOG.add(log_text);
 	}
 
-	isVisible = true;
+	visible = true;
 	App->entities->blocked_movement = true;
 }
 
 void Console::DestroyInterface() {
 	if (command_input != nullptr) App->gui->DestroyUIElement(command_input);
 
-	for (p2List_item<GuiText*>* item = on_screen_log.start; item != nullptr; item = item->next)
+	for (p2List_item<GuiText*>* item = screenLOG.start; item != nullptr; item = item->next)
 	{
 		item->data->text = nullptr;
 	}
 
-	isVisible = false;
+	visible = false;
 	App->entities->blocked_movement = false;
 	App->input->EnableTextInput(false);
 }
@@ -199,10 +209,10 @@ void Console::AddLogText(p2SString new_text) {
 			log_record.del(log_record.start);
 		}
 		log_record.add(new_text);
-		if (isVisible)
+		if (visible)
 		{
 			p2List_item<p2SString>* item2 = log_record.end;
-			for (p2List_item<GuiText*>* item = on_screen_log.end; item != nullptr; item = item->prev)
+			for (p2List_item<GuiText*>* item = screenLOG.end; item != nullptr; item = item->prev)
 			{
 				item->data->text = item2->data;
 			}
@@ -210,8 +220,8 @@ void Console::AddLogText(p2SString new_text) {
 	}
 }
 
-void Console::CreateCommand(const char* g_command, j1Module* g_callback, const char* explanation) {
-	ConsoleCommands* command = new ConsoleCommands(g_command, g_callback, explanation);
+void Console::CreateCommand(const char* g_command, j1Module* g_callback, const char* info) {
+	ConsoleCommands* command = new ConsoleCommands(g_command, g_callback, info);
 	commands.add(command);
 }
 
@@ -225,7 +235,7 @@ void Console::CheckCommand(p2SString command) {
 	{
 		if (item->data->text == command)
 		{
-			item->data->callback->OnCommand(command);
+			item->data->callback->Commands(command);
 			return;
 		}
 
@@ -237,7 +247,7 @@ void Console::CheckCommand(p2SString command) {
 
 		if (strcmp(given_initial_three, listed_initial_three) == 0)
 		{
-			item->data->callback->OnCommand(command);
+			item->data->callback->Commands(command);
 			return;
 		}
 	}
@@ -245,7 +255,7 @@ void Console::CheckCommand(p2SString command) {
 	LOG("Invalid command");
 }
 
-void Console::OnCommand(p2SString command) {
+void Console::Commands(p2SString command) {
 	char fps_string[8] = "fps_120";
 	char initial_three[5] = "0000";
 
@@ -253,11 +263,10 @@ void Console::OnCommand(p2SString command) {
 	{
 		for (p2List_item<ConsoleCommands*>* item = commands.start; item != nullptr; item = item->next)
 		{
-			//LOG(("%s : %s \n", item->data->text.GetString(), item->data->explanation);
 			char string[200];
 			strcpy_s(string, item->data->text.GetString());
 			strcat_s(string, " : ");
-			strcat_s(string, item->data->explanation);
+			strcat_s(string, item->data->info);
 			AddLogText(string);
 		}
 		return;
@@ -299,21 +308,18 @@ void Console::OnCommand(p2SString command) {
 		}
 		else
 		{
-			LOG("Invalid framerate cap number");
+			LOG("Not valid fps cap number");
 			return;
 		}
 
-		if (fps < 30) {
-			LOG("Too low framerate cap");
-		}
-		else if (fps > 120)
-		{
-			LOG("Too high framerate cap");
+		if (fps > 120 || fps < 30) 
+		{			
+			LOG("Set a number between 30 and 120");
 		}
 		else
 		{
 			App->framerate_cap = fps;
-			LOG("Framerate cap changed to %i", fps);
+			LOG("Framerate cap changed to: %i", fps);
 		}
 	}
 }

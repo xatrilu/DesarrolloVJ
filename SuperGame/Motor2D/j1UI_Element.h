@@ -44,21 +44,19 @@ public:
 	bool OnHover();
 
 public:
-	iPoint	local_pos;
-	iPoint	screen_pos;
+	iPoint	localPos;
+	iPoint	screenPos;
 	UI_Type	type;
 	FocusEvent focus_event;
+	j1Module* callback = nullptr;
+	j1UI_Element* parent = nullptr;
+	SDL_Rect rect;
+	SDL_Texture* texture = nullptr;
 
 	bool draggable;
 	bool interactable;
 	bool isStatic;
-	bool to_delete;
-
-	j1Module* callback = nullptr;
-	j1UI_Element* parent = nullptr;
-
-	SDL_Rect rect;
-	SDL_Texture* texture = nullptr;
+	bool to_delete;	
 };
 
 

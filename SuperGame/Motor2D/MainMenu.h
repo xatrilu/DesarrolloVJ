@@ -28,9 +28,9 @@ public:
 	void CreateCreditsScreen();
 
 private:
-	Menu visible_menu;
-	int window_width;
-	int window_height;
+	Menu openMenu;
+	int winWidth;
+	int winHeight;
 	bool fullscreen;
 	SDL_Texture* BackgroundTex;
 	SDL_Texture* TitleTex;
