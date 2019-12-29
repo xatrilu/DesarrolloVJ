@@ -102,17 +102,16 @@ bool j1Player::Awake(pugi::xml_node& config) {
 	jump_fx_path = config.child("jumpFX").attribute("source").as_string();
 	double_Jump_fx_path = config.child("jump2FX").attribute("source").as_string();
 
+	die_fx = App->audio->LoadFx(die_fx_path.GetString());
+	jump_fx = App->audio->LoadFx(jump_fx_path.GetString());
+	double_Jump_fx = App->audio->LoadFx(double_Jump_fx_path.GetString());
+
 	return ret;
 }
 
 bool j1Player::Start() {
 
 	current_speed = { 0,0 };
-
-	die_fx = App->audio->LoadFx(die_fx_path.GetString());
-	jump_fx = App->audio->LoadFx(jump_fx_path.GetString());
-	double_Jump_fx = App->audio->LoadFx(double_Jump_fx_path.GetString());
-
 	return true;
 }
 

@@ -52,13 +52,13 @@ public:
 	bool draggable;
 	bool interactable;
 	bool isStatic;
-	
+	bool to_delete;
 
 	j1Module* callback = nullptr;
 	j1UI_Element* parent = nullptr;
 
-public:
 	SDL_Rect rect;
+	SDL_Texture* texture = nullptr;
 };
 
 

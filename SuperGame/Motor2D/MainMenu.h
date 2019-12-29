@@ -32,6 +32,8 @@ private:
 	int window_width;
 	int window_height;
 	bool fullscreen;
+	SDL_Texture* BackgroundTex;
+	SDL_Texture* TitleTex;
 };
 
 #endif 

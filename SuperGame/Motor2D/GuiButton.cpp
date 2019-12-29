@@ -16,6 +16,7 @@ GuiButton::GuiButton(j1Module* g_callback) {
 	texture = nullptr;
 	current_rect = &normal_rect;
 	stay_clicked = false;
+	to_delete = false;
 }
 
 GuiButton::~GuiButton() {
@@ -57,8 +58,10 @@ bool GuiButton::CleanUp() {
 	bool ret = true;
 	text->CleanUp();
 	delete text;
+	parent = nullptr;
 	text = nullptr;
 	texture = nullptr;
+	callback = nullptr;
 	return ret;
 }
 

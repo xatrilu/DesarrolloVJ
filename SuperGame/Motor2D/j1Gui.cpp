@@ -6,6 +6,7 @@
 #include "j1Fonts.h"
 #include "j1Input.h"
 #include "j1Gui.h"
+#include "j1Audio.h"
 #include "brofiler/Brofiler/Brofiler.h"
 
 
@@ -26,7 +27,7 @@ bool j1Gui::Awake(pugi::xml_node& conf)
 	bool ret = true;
 
 	atlas_file_name = conf.child("image").attribute("file").as_string("");
-
+	clickFX = App->audio->LoadFx(conf.child("clickFX").attribute("source").as_string());
 	return ret;
 }
 
@@ -48,56 +49,67 @@ bool j1Gui::PreUpdate()
 
 	for (p2List_item<j1UI_Element*>* item = ui_elements.end; item != nullptr; item = item->prev)
 	{
-		iPoint mouse_motion;
-		App->input->GetMouseMotion(mouse_motion.x, mouse_motion.y);
-
-
-		if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT) {
-			if ((item->data->draggable) && (focused_element == item->data)) {
-
-				item->data->screen_pos.x += mouse_motion.x;
-				focused_element = item->data;
-			}
-		}
-
-		if (item->data->OnHover())
+		if (item->data->to_delete)
 		{
-			if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN) {
-				if (item->data->interactable) {
-					focused_element = item->data;
-					focused_element->HandleFocusEvent(FocusEvent::FOCUS_IN);
-					focused_element->Input();
-				}
-			}
-			break;
-		}
-
-		if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN) {
-			if ((focused_element != nullptr) && (!item->data->OnHover())) {
-				focused_element->HandleFocusEvent(FocusEvent::FOCUS_OUT);
-				focused_element = nullptr;
-			}
-		}
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_TAB) == KEY_DOWN) {
-		if (focused_element == nullptr)
-		{
-			focused_element = ui_elements.start->data;
+			DestroyUIElement(item->data);
 		}
 		else
 		{
-			int item = ui_elements.find(focused_element);
-			if (item == ui_elements.count() - 1)
+			iPoint mouse_motion;
+			App->input->GetMouseMotion(mouse_motion.x, mouse_motion.y);
+
+			if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT) 
 			{
-				item = -1;
+				if ((item->data->draggable) && (focused_element == item->data)) 
+				{
+					item->data->screen_pos.x += mouse_motion.x;					
+					item->data->parent->Input();				
+					focused_element = item->data;
+				}
 			}
-			focused_element = ui_elements[item + 1];
+
+			if (item->data->OnHover())
+			{
+				if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN) {
+					if (item->data->interactable) {
+						App->audio->PlayFx(clickFX);
+						focused_element = item->data;
+						focused_element->HandleFocusEvent(FocusEvent::FOCUS_IN);
+						if (!item->data->to_delete) {
+							focused_element->Input();
+						}
+					}
+				}
+				break;
+			}
+
+			if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN) {
+				if ((focused_element != nullptr) && (!item->data->OnHover())) {
+					focused_element->HandleFocusEvent(FocusEvent::FOCUS_OUT);
+					focused_element = nullptr;
+				}
+			}
+
+			if (App->input->GetKey(SDL_SCANCODE_TAB) == KEY_DOWN) {
+				if (focused_element == nullptr)
+				{
+					focused_element = ui_elements.start->data;
+				}
+				else
+				{
+					int item = ui_elements.find(focused_element);
+					if (item == ui_elements.count() - 1)
+					{
+						item = -1;
+					}
+					focused_element = ui_elements[item + 1];
+				}
+			}
 		}
 	}
-
 	return true;
 }
+
 
 bool j1Gui::Update(float dt) {
 	BROFILER_CATEGORY("GuiUpdate", Profiler::Color::BlueViolet)
@@ -196,8 +208,8 @@ void j1Gui::DestroyAllGui() {
 	{
 		DestroyUIElement(item->data);
 	}
-
 	ui_elements.clear();
+	focused_element = nullptr;
 }
 
 void j1Gui::DestroyUIlist(p2List<j1UI_Element*> list) {

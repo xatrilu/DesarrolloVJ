@@ -129,7 +129,7 @@ bool j1EntityManager::Start()
 	{
 		if (entity->data->type == EntityType::PLAYER) {
 			entity->data->texture = reference_player->texture;
-			player_pointer = (j1Player*)entity->data;
+			//player_pointer = (j1Player*)entity->data;
 		}
 		if (entity->data->type == EntityType::WALKING_ENEMY) {
 			entity->data->texture = reference_walking_enemy->texture;

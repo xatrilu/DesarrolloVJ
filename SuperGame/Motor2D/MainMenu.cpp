@@ -11,8 +11,9 @@
 #include "j1Window.h"
 #include "j1Audio.h"
 #include <Windows.h>
-#include "brofiler/Brofiler/Brofiler.h"
+#include "j1Player.h"
 #include "SDL/include/SDL.h"
+#include "brofiler/Brofiler/Brofiler.h"
 
 MainMenu::MainMenu() : j1Module()
 {
@@ -38,9 +39,11 @@ bool MainMenu::Start()
 	window_width = App->win->width;
 	window_width = App->win->height;
 
+	App->audio->PlayMusic("path_to_follow.ogg");
+	BackgroundTex = App->tex->Load("sprites/UI/MenuBackground.jpg");
+	TitleTex = App->tex->Load("sprites/UI/Title.png");
+
 	CreateMainScreen();
-	//App->audio->PlayMusic("path_to_follow.ogg");
-	visible_menu = Menu::MAIN_MENU;
 	return ret;
 }
 

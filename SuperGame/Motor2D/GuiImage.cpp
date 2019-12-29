@@ -7,6 +7,7 @@
 GuiImage::GuiImage(j1Module* g_callback) {
 	texture = (SDL_Texture*)App->gui->GetAtlas();
 	callback = g_callback;
+	to_delete = false;
 }
 
 void GuiImage::Init(iPoint position, SDL_Rect g_section) {

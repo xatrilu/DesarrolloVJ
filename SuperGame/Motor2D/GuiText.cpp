@@ -89,11 +89,13 @@ void GuiText::UpdateText() {
 	if (font == DEFAULT_FONT)
 	{
 		App->tex->UnLoad(texture);
+		texture = nullptr;
 		texture = App->font->Print(text.GetString());
 	}
 	else
 	{
 		App->tex->UnLoad(texture);
+		texture = nullptr;
 		texture = App->font->Print(text.GetString(), { (255),(255),(255),(255) }, App->font->console_font);
 	}
 }

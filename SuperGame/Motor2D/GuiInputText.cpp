@@ -13,6 +13,7 @@ GuiInputText::GuiInputText(j1Module* g_callback) {
 	focused = false;
 	usingAtlas = true;
 	cursor_position = 0;
+	to_delete = false;
 }
 
 GuiInputText::~GuiInputText() {}

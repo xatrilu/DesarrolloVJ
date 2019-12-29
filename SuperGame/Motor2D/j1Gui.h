@@ -57,6 +57,7 @@ public:
 	p2List<j1UI_Element*> ui_elements;
 	j1UI_Element* focused_element = nullptr;
 	bool debug = false;
+	uint	clickFX;
 };
 
 #endif // __j1GUI_H__

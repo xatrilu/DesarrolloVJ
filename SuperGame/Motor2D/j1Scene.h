@@ -98,8 +98,10 @@ public:
 	int time_star1;
 	int time_star2;
 	int time_star3;
+	int relative_max_time;
 	int time_discount;
 	j1Timer timer;
+	j1Timer performance_timer;
 	GuiText* time_text;
 	GuiText* time_count;
 	GuiText* score;
