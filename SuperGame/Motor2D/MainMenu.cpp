@@ -61,6 +61,7 @@ void MainMenu::OnEvent(j1UI_Element* element, FocusEvent event)
 		GuiButton* button = (GuiButton*)element;
 		switch (button->action)
 		{
+			LOG("action");
 		case ButtonAction::PLAY:
 			if (App->map->Load("Level1.tmx") == true)
 			{

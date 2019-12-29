@@ -4,11 +4,11 @@
 #include "j1Input.h"
 
 
-GuiInputText::GuiInputText(j1Module* callback) 
+GuiInputText::GuiInputText(j1Module* _callback) 
 {
 	background = new GuiImage(callback);
 	text = new GuiText(callback);
-	callback = callback;
+	callback = _callback;
 	defaultText = { "Input text" };
 	mouse = { 0,0,2,30 };
 	focused = false;

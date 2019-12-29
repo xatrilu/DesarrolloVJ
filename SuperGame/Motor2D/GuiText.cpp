@@ -13,9 +13,9 @@ GuiText::GuiText()
 	interactable = false;
 }
 
-GuiText::GuiText(j1Module* callback) 
+GuiText::GuiText(j1Module* _callback) 
 {
-	callback = callback;
+	callback = _callback;
 	font = DEFAULT_FONT;
 }
 

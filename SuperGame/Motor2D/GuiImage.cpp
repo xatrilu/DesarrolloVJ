@@ -4,10 +4,10 @@
 #include "j1Render.h"
 #include "j1Textures.h"
 
-GuiImage::GuiImage(j1Module* callback) 
+GuiImage::GuiImage(j1Module* _callback) 
 {
 	texture = (SDL_Texture*)App->gui->GetAtlas();
-	callback = callback;
+	callback = _callback;
 	to_delete = false;
 }
 

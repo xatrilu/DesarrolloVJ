@@ -9,9 +9,9 @@
 #include "p2Log.h"
 #include "j1Audio.h"
 
-GuiButton::GuiButton(j1Module* callback) 
+GuiButton::GuiButton(j1Module* _callback) 
 {
-	callback = callback;
+	callback = _callback;
 	text = new GuiText();
 	clickRect = { 0,0,0,0 };
 	texture = nullptr;
@@ -29,14 +29,14 @@ GuiButton::~GuiButton()
 	callback = nullptr;
 }
 
-void GuiButton::Init(iPoint pos, SDL_Rect normal, SDL_Rect hover, SDL_Rect click, p2SString txt, ButtonAction action, bool stay) 
+void GuiButton::Init(iPoint pos, SDL_Rect normal, SDL_Rect hover, SDL_Rect click, p2SString txt, ButtonAction _action, bool stay) 
 {
 	screenPos = pos;
 	texture = (SDL_Texture*)App->gui->GetAtlas();
 	normalRect = normal;
 	hoverRect = hover;
 	clickRect = click;
-	action = action;
+	action = _action;
 	cliking = stay;
 
 	if (parent != nullptr)
