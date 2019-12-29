@@ -31,20 +31,6 @@ bool GuiImage::CleanUp() {
 }
 
 
-void GuiImage::EmptyInit(SDL_Rect empty_rect) {
-	screen_pos.x = rect.x = empty_rect.x;
-	screen_pos.y = rect.y = empty_rect.y;
-	rect.w = empty_rect.w;
-	rect.h = empty_rect.h;
-
-	if (parent != nullptr)
-	{
-		local_pos.x = screen_pos.x - parent->screen_pos.x;
-		local_pos.y = screen_pos.y - parent->screen_pos.y;
-	}
-}
-
-
 bool GuiImage::Update(float dt) {
 	bool ret = true;
 	if (parent != nullptr)

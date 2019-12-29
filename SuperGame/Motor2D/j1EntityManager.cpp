@@ -241,6 +241,7 @@ bool j1EntityManager::Load(pugi::xml_node& data)
 		if (entity_name == "player") {
 			player_pointer = (j1Player*)CreateEntity(EntityType::PLAYER, x_position, y_position);
 			player_pointer->score = entity_node.attribute("score").as_int();
+			player_pointer->current_speed = { 0,0 };
 		}
 
 		if (entity_name == "walking_enemy")

@@ -54,7 +54,7 @@ void j1Entity::PathfindtoPlayer(int detection_range, j1Entity* player) {
 	else { going_after_player = false; }
 
 	//pathfinding debug
-	/*
+	
 	if (going_after_player)
 	{
 		int x, y;
@@ -70,7 +70,7 @@ void j1Entity::PathfindtoPlayer(int detection_range, j1Entity* player) {
 			if (App->collision->debug)App->render->DrawQuad(Debug_rect, 90, 850, 230, 40);
 		}
 	}
-	*/
+	
 }
 
 bool j1Entity::LoadAnimations(const char* path) {

@@ -118,8 +118,7 @@ bool j1Gui::PostUpdate()
 			item->data->Draw();
 		}
 
-	if (debug)
-		DebugDraw();
+	if (debug) DebugDraw();
 
 	return true;
 }

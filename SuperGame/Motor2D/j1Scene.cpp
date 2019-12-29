@@ -264,7 +264,7 @@ bool j1Scene::PostUpdate()
 bool j1Scene::CleanUp()
 {
 	LOG("Freeing scene");
-
+	GameOver();
 	return true;
 }
 
@@ -369,10 +369,6 @@ void j1Scene::OnEvent(j1UI_Element* element, FocusEvent event) {
 			break;
 		}
 	}
-
-	/*if (element->type == UI_Type::SLIDER) {
-		App->audio->ChangeVolume(element->output_value);
-	}*/
 }
 
 void j1Scene::UpdateScreenUI() {
@@ -406,7 +402,8 @@ void j1Scene::UpdateScreenUI() {
 	{
 		time_left = max_time - timer.ReadSec();
 		p2SString temp("%i", time_left);
-		time_count->text = temp;
+		time_count->text.Clear();
+		if (temp.Length() > 0) time_count->text = temp;
 		time_count->UpdateText();
 
 		if (on_screen_score != App->entities->player_pointer->score) {
@@ -447,6 +444,8 @@ void j1Scene::GameOver() {
 	App->entities->DestroyAllEntities();
 	App->render->camera.x = 0;
 	App->render->camera.y = 0;
+	visible_menu = Menu::MAIN_MENU;
+	current_level = Map::NO_MAP;
 	App->mainMenu->CreateMainScreen();
 }
 

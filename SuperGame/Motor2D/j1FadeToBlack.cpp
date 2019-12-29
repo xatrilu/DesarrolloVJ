@@ -70,6 +70,11 @@ bool j1FadeToBlack::PostUpdate()
 			App->entities->player_pointer->particles_created = false;
 			App->entities->player_pointer->isVisible = true;
 			App->entities->blocked_movement = false;
+
+			if (App->entities->player_pointer->last_checkpoint != nullptr)
+			{
+				App->entities->CheckpointLoad();
+			}
 		}
 	} break;
 	}

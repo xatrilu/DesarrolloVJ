@@ -11,6 +11,7 @@
 #include "j1Window.h"
 #include "j1Audio.h"
 #include <Windows.h>
+#include "brofiler/Brofiler/Brofiler.h"
 #include "SDL/include/SDL.h"
 
 MainMenu::MainMenu() : j1Module()
@@ -51,7 +52,7 @@ bool MainMenu::PostUpdate()
 
 void MainMenu::OnEvent(j1UI_Element* element, FocusEvent event) 
 {
-
+	BROFILER_CATEGORY("Main Menu Events", Profiler::Color::CadetBlue)
 	if ((element->type == UI_Type::BUTTON) && (event == FocusEvent::CLICKED))
 	{
 		GuiButton* button = (GuiButton*)element;
@@ -78,7 +79,9 @@ void MainMenu::OnEvent(j1UI_Element* element, FocusEvent event)
 		case ButtonAction::CONTINUE:
 			App->gui->DestroyAllGui();
 			App->LoadGame();
+			App->scene->LevelChange(NO_MAP, LEVEL_1);
 			App->scene->visible_menu = Menu::NO_MENU;
+			App->entities->blocked_movement = false;
 			App->scene->CreateScreenUI();
 			break;
 

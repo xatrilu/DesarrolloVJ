@@ -70,7 +70,7 @@ void j1Map::Draw()
 					SDL_Rect r = tileset->GetTileRect(tile_id);
 					iPoint pos = MapToWorld(x, y);
 					//camera cooling
-					if ((pos.x < -App->render->camera.x + App->render->camera.w) || (pos.x > -App->render->camera.x)) {
+					if ((pos.x < -App->render->camera.x + App->render->camera.w + 32) && (pos.x > -App->render->camera.x - 32)) {
 
 						if (layer->properties.Get("speed", 0) == 1) {
 							tileset->parallax = tileset->texture;
